@@ -25,9 +25,9 @@ As you journey through your reading, the app allows you to save your insights an
 
 ## Table of contents
 
-1. [Business Needs](business-needs)
+1. [Business Needs](#business-needs)
 
-2. [User Wants](user-wants)
+2. [User Wants](#user-wants)
 
 ## Business Needs
 
