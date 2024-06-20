@@ -17,7 +17,7 @@ mongo = PyMongo(app)
 @app.route("/get_cards")
 def get_cards():
     cards = list(mongo.db.tarotCards.find())
-    return render_template("reading.html", cards=cards)
+    return render_template("index.html", cards=cards)
 
 
 if __name__ == "__main__":

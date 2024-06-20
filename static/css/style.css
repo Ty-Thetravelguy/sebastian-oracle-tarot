@@ -2,3 +2,17 @@
     font-size: 50px;
     color: #fafafa;
 }
+
+/* Custom CSS for light text */
+.light-text {
+    color: #f0f0f0 ;
+}
+
+/* Specific style for select elements */
+.select-wrapper input.select-dropdown {
+    color: #f0f0f0 ;
+}
+
+h1{
+    font-size: 35px;
+}
