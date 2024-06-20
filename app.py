@@ -7,10 +7,6 @@ if os.path.exists("env.py"):
 
 app = Flask(__name__)
 
-# Ensure environment variables are set
-print("MONGO_URI:", os.environ.get("MONGO_URI"))
-print("MONGO_DBNAME:", os.environ.get("MONGO_DBNAME"))
-
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
