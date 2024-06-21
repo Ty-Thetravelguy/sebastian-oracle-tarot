@@ -1,18 +1,33 @@
+/****************************General**************************/
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 .custom-hamburger {
     font-size: 50px;
     color: #fafafa;
 }
 
-/* Custom CSS for light text */
-.light-text {
+
+/****************************Colors**************************/
+
+.select-wrapper input.select-dropdown {
     color: #f0f0f0 ;
 }
 
-/* Specific style for select elements */
-.select-wrapper input.select-dropdown {
-    color: #f0f0f0 ;
+/****************************Home**************************/
+
+.home-img {
+    width: 100%;
+    height: auto;
 }
 
 h1{
     font-size: 35px;
 }
+
