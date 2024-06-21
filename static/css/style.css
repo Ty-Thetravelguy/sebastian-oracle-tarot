@@ -29,5 +29,20 @@ html, body {
 
 h1{
     font-size: 35px;
+    margin-top: 10px;
 }
 
+/****************************Media Queries**************************/
+
+@media (max-width:1440px) {
+    h1 {
+        margin-top: 0px;
+    }
+}
+
+@media (max-width:1024px){
+    h1 {
+        font-size: 25px;
+    }
+    
+}
