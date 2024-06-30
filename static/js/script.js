@@ -1,7 +1,10 @@
 $(document).ready(function(){
     $('.sidenav').sidenav();
-  });
-
-  $(document).ready(function(){
     $('select').formSelect();
-  });
+    $('.datepicker').datepicker({
+        format: 'dd mmm, yyyy', 
+        yearRange: 60 
+    });
+    $('.timepicker').timepicker();
+});
+        

@@ -1,48 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col s12 m8 offset-m2 l6 offset-l3">
-            <h2 class="light-color-text">Register</h2>
-            <form method="POST" action="{{ url_for('register') }}">
-                {{ form.hidden_tag() }}
-                <div class="input-field">
-                    {{ form.email.label }}
-                    {{ form.email(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.first_name.label }}
-                    {{ form.first_name(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.last_name.label }}
-                    {{ form.last_name(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.dob.label }}
-                    {{ form.dob(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.place_of_birth.label }}
-                    {{ form.place_of_birth(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.time_of_birth.label }}
-                    {{ form.time_of_birth(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.password.label }}
-                    {{ form.password(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.confirm.label }}
-                    {{ form.confirm(class="validate") }}
-                </div>
-                <div class="input-field">
-                    {{ form.submit(class="btn waves-effect waves-light") }}
-                </div>
-            </form>
+
+<h1 class="center-align grey-text text-lighten-5">Register</h1>
+
+<div class="row">
+    <form class="col s12 m4 offset-m4" method="">
+        <!-- User data -->
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="firstName" name="firstName" type="text" class="validate grey-text text-lighten-5">
+                <label for="firstName" class="grey-text text-lighten-5">First Name</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="lastName" name="lastName" type="text" class="validate grey-text text-lighten-5">
+                <label for="lastName" class="grey-text text-lighten-5">Last Name</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="email_inline" name="email" type="email" class="validate grey-text text-lighten-5">
+                <label for="email_inline" class="grey-text text-lighten-5">Email Address</label>
+                <span class="helper-text grey-text text-lighten-5" data-error="wrong" data-success="right">You'll use
+                    your email to login in with.</span>
+            </div>
+            <div class="input-field col s12">
+                <input id="dateOfBirth" name="dateOfBirth" type="text" class="datepicker grey-text text-lighten-5">
+                <label for="dateOfBirth" class="grey-text text-lighten-5">Date of Birth</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="timeOfBirth" name="timeOfBirth" type="text" class="timepicker grey-text text-lighten-5">
+                <label for="timeOfBirth" class="grey-text text-lighten-5">Time of Birth</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="placeOfBirth" name="placeOfBirth" type="text" class="validate grey-text text-lighten-5">
+                <label for="placeOfBirth" class="grey-text text-lighten-5">City you were born in</label>
+            </div>
         </div>
-    </div>
+        <!--Password-->
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="password" type="password" class="validate grey-text text-lighten-5">
+                <label for="password" class="grey-text text-lighten-5">Password</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="password_repeat" type="password" class="validate grey-text text-lighten-5">
+                <label for="password_repeat" class="grey-text text-lighten-5">Repeat Password</label>
+            </div>
+        </div>
+        <!--Submit-->
+        <div class="row">
+            <button type="submit" class="col s12 btn-large teal darken-3">Submit</button>
+        </div>
+    </form>
 </div>
+
 {% endblock %}
