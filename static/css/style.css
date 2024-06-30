@@ -64,6 +64,22 @@ h1{
     
 }
 
+.timepicker-digital-display{
+    background-color: #574880;
+}
+
+.timepicker-canvas line {
+    stroke: #574880; 
+}
+
+.timepicker-canvas-bearing {
+    fill: #574880
+}
+
+.timepicker-canvas-bg {
+    fill: #574880
+}
+
 /****************************Media Queries**************************/
 
 @media (max-width:1440px) {
