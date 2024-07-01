@@ -52,7 +52,7 @@ h1{
 
 .datepicker-table tbody tr td.is-selected {
     background-color: #574880; /* Change this to your desired color for selected date */
-    color: #ffffff !important; /* Change this to your desired text color for selected date */
+    color: #574880; /* Change this to your desired text color for selected date */
 }
 
 .datepicker-table td.is-today {
@@ -78,6 +78,28 @@ h1{
 
 .timepicker-canvas-bg {
     fill: #574880
+}
+
+.timepicker-plate {
+    background-color: #C11E38;
+
+}
+.timepicker-text-container {
+   
+    color: rgba(255,255,255,0.6);
+ 
+}
+
+.timepicker-tick {
+    color: #fafafa
+}
+
+.timepicker-close {
+    color: #fafafa;
+}
+
+.timepicker-analog-display {
+    background-color: #574880;
 }
 
 /****************************Media Queries**************************/
