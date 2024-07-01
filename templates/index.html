@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class="container">
+<div class="container index-page">
     <div class="row">
         <div class="col m12 l6">
             <img class="home-img" src="{{ url_for('static', filename='imgages/tarot-reader-v6.jpg') }}" alt="Tarot Reader">
@@ -12,7 +11,7 @@
                     <h1 class="blue-grey-text text-lighten-5">Select a Category</h1>
                     <div class="input-field col s12">
                         <select class="light-text">
-                            <option value="" disabled selected>Choose your option</option>
+                            <option id="light-text" value="" disabled selected>Choose your option</option>
                             <option value="General">General</option>
                             <option value="Love">Love</option>
                             <option value="Career">Career</option>
@@ -26,7 +25,7 @@
                     <div class="input-field col s12">
                         <textarea id="question" class="materialize-textarea blue-grey-text text-lighten-5"></textarea>
                         <label for="question" class="blue-grey-text text-lighten-5">Think of an open-ended question to ask.</label>
-                      </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -44,6 +43,4 @@
         </div>
     </div>
 </div>
-
-
 {% endblock %}
