@@ -4,44 +4,45 @@
 <h1 class="center-align grey-text text-lighten-5">Register</h1>
 
 <div class="row">
-    <form class="col s12 m4 offset-m4" method="">
+    <form class="col s12 m4 offset-m4" method="POST">
         <!-- User data -->
         <div class="row">
             <div class="input-field col s12">
-                <input id="firstName" name="firstName" type="text" class="validate grey-text text-lighten-5">
-                <label for="firstName" class="grey-text text-lighten-5">First Name</label>
+                <input id="first_name" name="first_name" type="text" class="validate grey-text text-lighten-5" required>
+                <label for="first_name" class="grey-text text-lighten-5">First Name</label>
             </div>
             <div class="input-field col s12">
-                <input id="lastName" name="lastName" type="text" class="validate grey-text text-lighten-5">
-                <label for="lastName" class="grey-text text-lighten-5">Last Name</label>
+                <input id="last_name" name="last_name" type="text" class="validate grey-text text-lighten-5" required>
+                <label for="last_name" class="grey-text text-lighten-5">Last Name</label>
             </div>
             <div class="input-field col s12">
-                <input id="email_inline" name="email" type="email" class="validate grey-text text-lighten-5">
-                <label for="email_inline" class="grey-text text-lighten-5">Email Address</label>
+                <input id="email" name="email" type="email" class="validate grey-text text-lighten-5" required>
+                <label for="email" class="grey-text text-lighten-5">Email Address</label>
                 <span class="helper-text grey-text text-lighten-5" data-error="wrong" data-success="right">You'll use
                     your email to login in with.</span>
             </div>
             <div class="input-field col s12">
-                <input id="dateOfBirth" name="dateOfBirth" type="text" class="datepicker grey-text text-lighten-5">
-                <label for="dateOfBirth" class="grey-text text-lighten-5">Date of Birth</label>
+                <input id="date_of_birth" name="date_of_birth" type="text" class="datepicker grey-text text-lighten-5" required>
+                <label for="date_of_birth" class="grey-text text-lighten-5">Date of Birth</label>
             </div>
             <div class="input-field col s12">
-                <input id="timeOfBirth" name="timeOfBirth" type="text" class="timepicker grey-text text-lighten-5">
-                <label for="timeOfBirth" class="grey-text text-lighten-5">Time of Birth</label>
+                <input id="time_of_birth" name="time_of_birth" type="text" class="timepicker grey-text text-lighten-5">
+                <label for="time_of_birth" class="grey-text text-lighten-5">Time of Birth</label>
             </div>
             <div class="input-field col s12">
-                <input id="placeOfBirth" name="placeOfBirth" type="text" class="validate grey-text text-lighten-5">
-                <label for="placeOfBirth" class="grey-text text-lighten-5">City you were born in</label>
+                <input id="place_of_birth" name="place_of_birth" type="text" class="validate grey-text text-lighten-5" required>
+                <label for="place_of_birth" class="grey-text text-lighten-5">City you were born in</label>
             </div>
         </div>
         <!--Password-->
         <div class="row">
             <div class="input-field col s12">
-                <input id="password" type="password" class="validate grey-text text-lighten-5">
+                <input id="password" name="password" type="password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]).{6,20}$" 
+                class="validate grey-text text-lighten-5" required>
                 <label for="password" class="grey-text text-lighten-5">Password</label>
             </div>
             <div class="input-field col s12">
-                <input id="password_repeat" type="password" class="validate grey-text text-lighten-5">
+                <input id="password_repeat" name="password_repeat" minlength="6" maxlength="20" type="password" class="validate grey-text text-lighten-5" required>
                 <label for="password_repeat" class="grey-text text-lighten-5">Repeat Password</label>
             </div>
         </div>

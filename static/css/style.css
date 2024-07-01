@@ -34,50 +34,39 @@ h1{
     margin-top: 10px;
 }
 
-.select-wrapper input.select-dropdown, .light-color-text {
-    color: #000000;
+
+/****************************Date and time picker**************************/
+
+.select-wrapper input.select-dropdown,
+.light-color-text,
+.dropdown-content li>a, 
+.dropdown-content li>span {
+    color: #000;
 }
 
-.dropdown-content li>a, .dropdown-content li>span {
-    color: #000;    
-}
 
-.datepicker-date-display {
+.datepicker-date-display,
+.datepicker-table tbody tr td.is-selected,
+.timepicker-digital-display {
     background-color: #574880;
 }
 
-.datepicker-table abbr {
-
+.datepicker-table abbr,
+.datepicker-table tbody tr td.is-selected,
+.datepicker-table td.is-today,
+.datepicker-cancel, 
+.datepicker-clear, 
+.datepicker-today, 
+.datepicker-done {
     color: #574880;
-}
-
-.datepicker-table tbody tr td.is-selected {
-    background-color: #574880; /* Change this to your desired color for selected date */
-    color: #574880; /* Change this to your desired text color for selected date */
-}
-
-.datepicker-table td.is-today {
-    color: #574880;
-}
-
-.datepicker-cancel, .datepicker-clear, .datepicker-today, .datepicker-done {
-    color: #574880;
-    
-}
-
-.timepicker-digital-display{
-    background-color: #574880;
 }
 
 .timepicker-canvas line {
     stroke: #574880; 
 }
 
-.timepicker-canvas-bearing {
-    fill: #574880
-}
-
-.timepicker-canvas-bg {
+.timepicker-canvas-bearing,
+.timepicker-canvas-bg  {
     fill: #574880
 }
 
@@ -86,9 +75,7 @@ h1{
 
 }
 .timepicker-text-container {
-   
     color: rgba(255,255,255,0.6);
- 
 }
 
 .timepicker-tick {

@@ -63,8 +63,23 @@
     <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons custom-hamburger">menu</i></a>
   </header>
 
-  {% block content %}
-  {% endblock %}
+  <section>
+    <!-- Flash Message -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="row flashes">
+            <h4 class="center-align grey-text text-lighten-5">{{ message}}</h4>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </section>
+
+  <main class="container">
+    {% block content %}
+    {% endblock %}
+  </main>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
