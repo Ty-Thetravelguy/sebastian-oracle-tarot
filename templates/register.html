@@ -3,7 +3,7 @@
 <div class="container register-page">
     <h1 class="center-align grey-text text-lighten-5">Register</h1>
     <div class="row">
-        <form class="col s12 m6 offset-m3" method="POST">
+        <form class="col s12 m6 offset-m3" method="POST" action="{{ url_for('register')}}">
             <!-- User data -->
             <div class="row">
                 <div class="input-field col s12">
@@ -52,6 +52,15 @@
                 <button type="submit" class="col s12 btn-large teal darken-3 waves-effect waves-light">Submit</button>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <p class="center-align">
+            Already Registered? 
+            <a href="{{ url_for('login') }}" class="grey-text text-lighten-5">Log In</a>
+        </p>
     </div>
 </div>
 {% endblock %}
