@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container profile-page">
+    <h1 class="center-align grey-text text-lighten-5">Profile Page</h1>
+    <div class="row">
+        <div class="col s12 m6 offset-m3">
+            <div class="row">
+                <div class="col s6">
+                    <p class="right-align grey-text text-lighten-5">First Name:</p>
+                </div>
+                <div class="col s6">
+                    <p class="left-align grey-text text-lighten-5">{{ user.first_name }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <p class="right-align grey-text text-lighten-5">Last Name:</p>
+                </div>
+                <div class="col s6">
+                    <p class="left-align grey-text text-lighten-5">{{ user.last_name }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <p class="right-align grey-text text-lighten-5">Email Address:</p>
+                </div>
+                <div class="col s6">
+                    <p class="left-align grey-text text-lighten-5">{{ user.email }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <p class="right-align grey-text text-lighten-5">Date of Birth:</p>
+                </div>
+                <div class="col s6">
+                    <p class="left-align grey-text text-lighten-5">{{ user.date_of_birth }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <p class="right-align grey-text text-lighten-5">Time of Birth:</p>
+                </div>
+                <div class="col s6">
+                    <p class="left-align grey-text text-lighten-5">{{ user.time_of_birth }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <p class="right-align grey-text text-lighten-5">Place of Birth:</p>
+                </div>
+                <div class="col s6">
+                    <p class="left-align grey-text text-lighten-5">{{ user.place_of_birth }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
