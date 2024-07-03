@@ -21,6 +21,7 @@
 
   <header>
     <ul id="slide-out" class="sidenav blue-grey darken-4">
+      {% if session.user %}
       <li>
         <div class="user-view">
           <a href="#name"><span class="grey-text text-lighten-3 name">John Doe</span></a>
@@ -33,12 +34,12 @@
         <div class="divider"></div>
       </li>
       <li><a href="{{ url_for('profile', email=session['user']) }}" class="grey-text text-lighten-3"><i
-            class="material-icons grey-text text-lighten-3">info</i>Profile</a></li>
+            class="material-icons grey-text text-lighten-3">account_circle</i>Profile</a></li>
       <li>
         <div class="divider"></div>
       </li>
-      <li><a href="#" class="grey-text text-lighten-3"><i
-            class="material-icons grey-text text-lighten-3">save</i>Saved Readings</a></li>
+      <li><a href="#" class="grey-text text-lighten-3"><i class="material-icons grey-text text-lighten-3">save</i>Saved
+          Readings</a></li>
       <li>
         <div class="divider"></div>
       </li>
@@ -47,18 +48,21 @@
       <li>
         <div class="divider"></div>
       </li>
-      <li><a href="#" class="grey-text text-lighten-3"><i
+      <li><a href="{{ url_for('logout') }}" class="grey-text text-lighten-3"><i
             class="material-icons grey-text text-lighten-3">close</i>Log Out</a></li>
       <li>
         <div class="divider"></div>
       </li>
-      <li><a href="{{ url_for('register') }}" class="grey-text text-lighten-3"><i
-            class="material-icons grey-text text-lighten-3">close</i>Register</a></li>
+      {% else %}
+      <li><a href="{{  url_for('login') }}" class="grey-text text-lighten-3"><i
+            class="material-icons grey-text text-lighten-3">all_inclusive</i>Log In</a></li>
       <li>
         <div class="divider"></div>
       </li>
-      <li><a href="{{  url_for('login') }}" class="grey-text text-lighten-3"><i
-            class="material-icons grey-text text-lighten-3">close</i>Log In</a></li>
+      <li><a href="{{ url_for('register') }}" class="grey-text text-lighten-3"><i
+            class="material-icons grey-text text-lighten-3">add</i>Register</a></li>
+      <li>
+        {% endif %}
     </ul>
     <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons custom-hamburger">menu</i></a>
   </header>

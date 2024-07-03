@@ -106,16 +106,29 @@ def login():
 
 @app.route("/profile/<email>")
 def profile(email):
+    # Checks if the user is logged in and if the logged-in 
+    # user's email matches the email in the URL
     if "user" in session and session["user"] == email:
         user = mongo.db.users.find_one({"email": email})
         if user:
+            # If the user is found in the database
             return render_template("profile.html", user=user)
         else:
+            # If no user is found, flash a message and redirect to the login page
             flash("User not found.")
             return redirect(url_for("login"))
     else:
+        # If the user is not logged in or trying to access a different user's profile
         flash("You need to log in to view your profile.")
         return redirect(url_for("login"))
+
+
+@app.route("/logout")
+def logout():
+    # Remove user from session cookies
+    flash("You have been logged out")
+    session.pop("user")
+    return redirect(url_for("login"))
 
 
 if __name__ == "__main__":
