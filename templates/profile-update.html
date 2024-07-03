@@ -21,17 +21,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col s6">
-                    <p class="right-align grey-text text-lighten-5 email-title">Email Address:</p>
-                </div>
-                <div class="col s6">
-                    <p class="left-align grey-text text-lighten-5 email-container">
-                        {{ user.email }}
-                        <a href="{{ url_for('update_email_page', email=user.email) }}">
-                            <i class="material-icons tooltipped" data-position="right" data-tooltip="Update Email Address">edit</i>
-                        </a>
-                    </p>
-                </div>
+                <form method="POST" action="{{ url_for('update_email', email=user.email) }}">
+                    <div class="input-field">
+                        <input type="email" id="new_email" name="new_email" class="validate grey-text text-lighten-5" required>
+                        <label for="new_email">New Email Address</label>
+                    </div>
+                    <button type="submit" class="btn waves-effect waves-light">Update Email</button>
+                </form>
             </div>
             <div class="row">
                 <div class="col s6">

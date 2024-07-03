@@ -110,8 +110,20 @@ h1{
   
 }
 
-/****************************Login Page**************************/
+/****************************Profile page**************************/
 
+
+
+.email-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.email-container a {
+    margin-left: 10px;
+    color: #fafafa;
+}
 
 
 

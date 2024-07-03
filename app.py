@@ -2,9 +2,7 @@ import os
 import re
 from flask import Flask, render_template, redirect, url_for, flash, session, request
 from flask_pymongo import PyMongo
-from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 if os.path.exists("env.py"):
     import env
@@ -16,7 +14,6 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
-
 
 # Password Validation Function
 def validate_password(password):
@@ -120,6 +117,42 @@ def profile(email):
     else:
         # If the user is not logged in or trying to access a different user's profile
         flash("You need to log in to view your profile.")
+        return redirect(url_for("login"))
+
+
+@app.route("/update_email_page/<email>")
+def update_email_page(email):
+    if "user" in session and session["user"] == email:
+        user = mongo.db.users.find_one({"email": email})
+        if user:
+            return render_template("profile-update.html", user=user)
+        else:
+            flash("User not found.")
+            return redirect(url_for("login"))
+    else:
+        flash("You need to log in to update your email.")
+        return redirect(url_for("login"))
+
+
+@app.route("/update_email/<email>", methods=["POST"])
+def update_email(email):
+    if "user" in session and session["user"] == email:
+        new_email = request.form.get("new_email").lower()
+        existing_user = mongo.db.users.find_one({"email": new_email})
+        if existing_user:
+            flash("Email already in use. Please choose a different one.")
+            return redirect(url_for("update_email_page", email=email))
+        
+        mongo.db.users.update_one(
+            {"email": email},
+            {"$set": {"email": new_email}}
+        )
+
+        session["user"] = new_email
+        flash("Email updated successfully!")
+        return redirect(url_for("profile", email=new_email))
+    else:
+        flash("You need to log in to update your email.")
         return redirect(url_for("login"))
 
 
