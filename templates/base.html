@@ -18,14 +18,13 @@
 </head>
 
 <body>
-
   <header>
     <ul id="slide-out" class="sidenav blue-grey darken-4">
       {% if session.user %}
       <li>
         <div class="user-view">
-          <a href="#name"><span class="grey-text text-lighten-3 name">John Doe</span></a>
-          <a href="#email"><span class="grey-text text-lighten-3 email">jdandturk@gmail.com</span></a>
+            <a href="#name"><span class="grey-text text-lighten-3 name">{{ logged_in_user.first_name }} {{ logged_in_user.last_name }}</span></a>
+            <a href="#email"><span class="grey-text text-lighten-3 email">{{ logged_in_user.email }}</span></a>
         </div>
       </li>
       <li><a href="{{ url_for('get_cards') }}" class="grey-text text-lighten-3"><i
@@ -70,13 +69,13 @@
   <section>
     <!-- Flash Message -->
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-          <div class="row flashes">
-            <h4 class="center-align grey-text text-lighten-5">{{ message}}</h4>
-          </div>
-        {% endfor %}
-      {% endif %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="row flashes">
+      <h4 class="center-align grey-text text-lighten-5">{{ message}}</h4>
+    </div>
+    {% endfor %}
+    {% endif %}
     {% endwith %}
   </section>
 

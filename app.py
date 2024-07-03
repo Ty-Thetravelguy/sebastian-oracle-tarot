@@ -120,6 +120,14 @@ def profile(email):
         return redirect(url_for("login"))
 
 
+@app.context_processor
+def inject_user():
+    if "user" in session:
+        user = mongo.db.users.find_one({"email": session["user"]})
+        return dict(logged_in_user=user)
+    return dict(logged_in_user=None)
+
+
 @app.route("/update_email_page/<email>")
 def update_email_page(email):
     if "user" in session and session["user"] == email:
