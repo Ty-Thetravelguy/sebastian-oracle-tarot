@@ -1,6 +1,7 @@
 import os
 import re
-from flask import Flask, render_template, redirect, url_for, flash, session, request
+import openai
+from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -12,6 +13,8 @@ app = Flask(__name__)
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+
 
 mongo = PyMongo(app)
 
@@ -170,6 +173,70 @@ def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
+
+
+# Handle the reading request
+@app.route("/tarot_reading", methods=["POST"])
+def tarot_reading():
+    if request.method == "POST":
+        user_choice = request.form.get("tarot_choice")
+        user_question = request.form.get("question")
+        user = mongo.db.users.find_one({"email": session["user"]})
+
+        # Fetch cards from database
+        cards = list(mongo.db.tarotCards.find())
+        
+        # Select cards based on user's choice
+        if user_choice == "General":
+            selected_cards = random.sample(cards, 3)
+        elif user_choice == "Love":
+            selected_cards = random.sample(cards, 5)
+        elif user_choice == "Career":
+            selected_cards = random.sample(cards, 6)
+        else:
+            flash("Invalid choice")
+            return redirect(url_for("get_cards"))
+
+        # Prepare the prompt for ChatGPT
+        system_message = {
+            "role": "system",
+            "content": "You are a Tarot Reader. Your name is Sebastian Oracle. Speak to the user as a reader and use their first name. Do their tarot reading."
+        }
+        user_message = {
+            "role": "user",
+            "content": f"""
+            User's name: {user['first_name']} {user['last_name']}
+            Date of birth: {user['date_of_birth']}
+            Time of birth: {user['time_of_birth']}
+            Place of birth: {user['place_of_birth']}
+            Question: {user_question}
+            Tarot spread: {"Three-Card Spread" if user_choice == "General" else "Five-Card Spread" if user_choice == "Love" else "Six-Card Spread"}
+            {"Card position past: " + selected_cards[0]["cardName"]}
+            {"Card position present: " + selected_cards[1]["cardName"]}
+            {"Card position future: " + selected_cards[2]["cardName"]}
+            {"Card position advice: " + selected_cards[3]["cardName"] if user_choice in ["Love", "Career"] else ""}
+            {"Card position potential outcomes: " + selected_cards[4]["cardName"] if user_choice in ["Love", "Career"] else ""}
+            {"Card position cause: " + selected_cards[5]["cardName"] if user_choice == "Career" else ""}
+            """
+        }
+
+        # ChatGPT API call
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[system_message, user_message]
+        )
+
+        reading_output = response.choices[0].message['content']
+
+        return jsonify({
+            "selected_cards": selected_cards,
+            "reading_output": reading_output
+        })
+
+
+@app.route("/reading")
+def reading():
+    return render_template("reading.html")
 
 
 if __name__ == "__main__":
