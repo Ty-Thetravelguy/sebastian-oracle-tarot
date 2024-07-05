@@ -1,6 +1,8 @@
 import os
 import re
+import random
 import openai
+import logging
 from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,10 +15,11 @@ app = Flask(__name__)
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
-openai.api_key = os.environ.get("OPENAI_API_KEY")
-
 
 mongo = PyMongo(app)
+
+# Ensure openai key is set from env
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Password Validation Function
 def validate_password(password):
@@ -130,7 +133,6 @@ def inject_user():
         return dict(logged_in_user=user)
     return dict(logged_in_user=None)
 
-
 @app.route("/update_email_page/<email>")
 def update_email_page(email):
     if "user" in session and session["user"] == email:
@@ -174,18 +176,21 @@ def logout():
     session.pop("user")
     return redirect(url_for("login"))
 
-
-# Handle the reading request
+# New route to handle the reading request
 @app.route("/tarot_reading", methods=["POST"])
 def tarot_reading():
-    if request.method == "POST":
+    try:
         user_choice = request.form.get("tarot_choice")
         user_question = request.form.get("question")
         user = mongo.db.users.find_one({"email": session["user"]})
 
+        # Log incoming data
+        logging.debug(f"user_choice: {user_choice}, user_question: {user_question}, user: {user}")
+
         # Fetch cards from database
         cards = list(mongo.db.tarotCards.find())
-        
+        logging.debug(f"Fetched {len(cards)} cards from the database")
+
         # Select cards based on user's choice
         if user_choice == "General":
             selected_cards = random.sample(cards, 3)
@@ -197,33 +202,38 @@ def tarot_reading():
             flash("Invalid choice")
             return redirect(url_for("get_cards"))
 
-        # Prepare the prompt for ChatGPT
-        system_message = {
-            "role": "system",
-            "content": "You are a Tarot Reader. Your name is Sebastian Oracle. Speak to the user as a reader and use their first name. Do their tarot reading."
-        }
-        user_message = {
-            "role": "user",
-            "content": f"""
-            User's name: {user['first_name']} {user['last_name']}
-            Date of birth: {user['date_of_birth']}
-            Time of birth: {user['time_of_birth']}
-            Place of birth: {user['place_of_birth']}
-            Question: {user_question}
-            Tarot spread: {"Three-Card Spread" if user_choice == "General" else "Five-Card Spread" if user_choice == "Love" else "Six-Card Spread"}
-            {"Card position past: " + selected_cards[0]["cardName"]}
-            {"Card position present: " + selected_cards[1]["cardName"]}
-            {"Card position future: " + selected_cards[2]["cardName"]}
-            {"Card position advice: " + selected_cards[3]["cardName"] if user_choice in ["Love", "Career"] else ""}
-            {"Card position potential outcomes: " + selected_cards[4]["cardName"] if user_choice in ["Love", "Career"] else ""}
-            {"Card position cause: " + selected_cards[5]["cardName"] if user_choice == "Career" else ""}
-            """
-        }
+        # Log selected cards
+        logging.debug(f"Selected cards: {selected_cards}")
+
+        # Prepare the messages for ChatGPT
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a Tarot Reader. Your name is Sebastian Oracle. Speak to the user as a reader and use their first name. Do their tarot reading."
+            },
+            {
+                "role": "user",
+                "content": f"""
+                User's name: {user['first_name']} {user['last_name']}
+                Date of birth: {user['date_of_birth']}
+                Time of birth: {user['time_of_birth']}
+                Place of birth: {user['place_of_birth']}
+                Question: {user_question}
+                Tarot spread: {"Three-Card Spread" if user_choice == "General" else "Five-Card Spread" if user_choice == "Love" else "Six-Card Spread"}
+                Card position past: {selected_cards[0]["cardName"]}
+                Card position present: {selected_cards[1]["cardName"]}
+                Card position future: {selected_cards[2]["cardName"]}
+                {"Card position advice: " + selected_cards[3]["cardName"] if user_choice in ["Love", "Career"] else ""}
+                {"Card position potential outcomes: " + selected_cards[4]["cardName"] if user_choice in ["Love", "Career"] else ""}
+                {"Card position cause: " + selected_cards[5]["cardName"] if user_choice == "Career" else ""}
+                """
+            }
+        ]
 
         # ChatGPT API call
         response = openai.ChatCompletion.create(
             model="gpt-4",
-            messages=[system_message, user_message]
+            messages=messages
         )
 
         reading_output = response.choices[0].message['content']
@@ -232,11 +242,9 @@ def tarot_reading():
             "selected_cards": selected_cards,
             "reading_output": reading_output
         })
-
-
-@app.route("/reading")
-def reading():
-    return render_template("reading.html")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        return jsonify({"error": "An internal error occurred"}), 500
 
 
 if __name__ == "__main__":
