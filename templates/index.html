@@ -3,41 +3,38 @@
 <div class="container index-page">
     <div class="row">
         <div class="col m12 l6">
-            <img class="home-img" src="{{ url_for('static', filename='imgages/tarot-reader-v6.jpg') }}" alt="Tarot Reader">
+            <img class="home-img" src="{{ url_for('static', filename='images/tarot-reader-v6.jpg') }}" alt="Tarot Reader">
         </div>
         <div class="col m12 l6">
             <div class="row">
                 <div class="col s12">
                     <h1 class="blue-grey-text text-lighten-5">Select a Category</h1>
-                    <div class="input-field col s12">
-                        <select class="light-text">
-                            <option id="light-text" value="" disabled selected>Choose your option</option>
-                            <option value="General">General</option>
-                            <option value="Love">Love</option>
-                            <option value="Career">Career</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                    <h1 class="blue-grey-text text-lighten-5">Ask Sebastian Oracle your question</h1>
-                    <div class="input-field col s12">
-                        <textarea id="question" class="materialize-textarea blue-grey-text text-lighten-5"></textarea>
-                        <label for="question" class="blue-grey-text text-lighten-5">Think of an open-ended question to ask.</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                        <i class="material-icons right">send</i>
-                    </button>
-                </div>
-                <div class="col s6">
-                    <button class="btn waves-effect waves-light right" type="button" name="action">Clear
-                        <i class="material-icons right">autorenew</i>
-                    </button>
+                    <form id="tarot-form">
+                        <div class="input-field col s12">
+                            <select name="tarot_choice" class="light-text" required>
+                                <option value="" disabled selected>Choose your option</option>
+                                <option value="General">General</option>
+                                <option value="Love">Love</option>
+                                <option value="Career">Career</option>
+                            </select>
+                        </div>
+                        <div class="input-field col s12">
+                            <textarea id="question" name="question" class="materialize-textarea blue-grey-text text-lighten-5" required></textarea>
+                            <label for="question" class="blue-grey-text text-lighten-5">Think of an open-ended question to ask.</label>
+                        </div>
+                        <div class="row">
+                            <div class="col s6">
+                                <button class="btn waves-effect waves-light" type="submit">Submit
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                            <div class="col s6">
+                                <button class="btn waves-effect waves-light right" type="reset">Clear
+                                    <i class="material-icons right">autorenew</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

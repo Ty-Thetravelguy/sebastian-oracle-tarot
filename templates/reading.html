@@ -5,35 +5,20 @@
 <div class="container reading-page">
     <h1 class="center-align grey-text text-lighten-5">Your Tarot Reading</h1>
     <div class="center-align">
-        <img src="{{ url_for('static', filename='imgages/giphy.webp') }}" alt="Shuffling cards" id="shuffling-image">
+        <img src="{{ url_for('static', filename='images/giphy.webp') }}" alt="Shuffling cards" id="shuffling-image">
         <p>Keep thinking about your question while I'm shuffling the cards...</p>
     </div>
     <div id="reading-result" style="display:none;">
-        <div class="row">
-            {% for card in cards %}
-            <div class="col s4 m2">
-                <img src="{{ card['cardImg'] }}" alt="{{ card['cardName'] }}" class="responsive-img">
-                <p class="center-align grey-text text-lighten-5">{{ card['cardName'] }}</p>
-            </div>
-            {% endfor %}
+        <div class="row" id="cards-container">
+            <!-- Cards will be appended here by JavaScript -->
         </div>
         <div class="row">
             <div class="col s12">
-                <p class="grey-text text-lighten-5">{{ reading_output }}</p>
+                <p class="grey-text text-lighten-5" id="reading-output"></p>
             </div>
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            document.getElementById('shuffling-image').style.display = 'none';
-            document.getElementById('reading-result').style.display = 'block';
-        }, 10000); // 10 seconds
-    });
-</script>
-
-
 
     <!-- {% for card in cards %}
         <div>
