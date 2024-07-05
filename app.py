@@ -5,6 +5,7 @@ import openai
 import logging
 from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_pymongo import PyMongo
+from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 
 if os.path.exists("env.py"):
@@ -176,6 +177,11 @@ def logout():
     session.pop("user")
     return redirect(url_for("login"))
 
+# Function to convert MongoDB documents to JSON-serializable format
+def convert_objectid_to_string(doc):
+    doc['_id'] = str(doc['_id'])
+    return doc
+
 # New route to handle the reading request
 @app.route("/tarot_reading", methods=["POST"])
 def tarot_reading():
@@ -204,6 +210,9 @@ def tarot_reading():
 
         # Log selected cards
         logging.debug(f"Selected cards: {selected_cards}")
+
+        # Convert ObjectId to string for JSON serialization
+        selected_cards = [convert_objectid_to_string(card) for card in selected_cards]
 
         # Prepare the messages for ChatGPT
         messages = [
@@ -236,7 +245,15 @@ def tarot_reading():
             messages=messages
         )
 
-        reading_output = response.choices[0].message['content']
+        reading_output = response['choices'][0]['message']['content']
+
+        # Store the selected cards and reading output in the session
+        session["selected_cards"] = selected_cards
+        session["reading_output"] = reading_output
+
+        # Log the session variables
+        logging.debug(f"Session selected_cards: {session['selected_cards']}")
+        logging.debug(f"Session reading_output: {session['reading_output']}")
 
         return jsonify({
             "selected_cards": selected_cards,
@@ -245,6 +262,22 @@ def tarot_reading():
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         return jsonify({"error": "An internal error occurred"}), 500
+
+
+@app.route("/reading")
+def reading():
+    cards = session.get("selected_cards", [])
+    reading_output = session.get("reading_output", "")
+
+    # Log the session variables
+    logging.debug(f"Session cards: {cards}")
+    logging.debug(f"Session reading_output: {reading_output}")
+
+    if not cards or not reading_output:
+        flash("No reading found. Please submit your question again.")
+        return redirect(url_for("get_cards"))
+
+    return render_template("reading.html", cards=cards, reading_output=reading_output)
 
 
 if __name__ == "__main__":
