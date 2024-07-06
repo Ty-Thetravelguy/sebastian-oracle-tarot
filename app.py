@@ -2,7 +2,6 @@ import os
 import re
 import random
 import openai
-import logging
 from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_pymongo import PyMongo
 from bson import ObjectId
@@ -18,17 +17,11 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
-
-# Ensure openai key is set from env
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-# Password Validation Function
 def validate_password(password):
     pattern = r"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\\|,.<>\/?]).{6,20}$"
-    if re.match(pattern, password):
-        return True
-    else:
-        return False
+    return re.match(pattern, password) is not None
 
 @app.route("/")
 @app.route("/get_cards")
@@ -39,28 +32,22 @@ def get_cards():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # Check if username already exists in DB
-        existing_user = mongo.db.users.find_one(
-            {"email": request.form.get("email").lower()})
+        existing_user = mongo.db.users.find_one({"email": request.form.get("email").lower()})
 
-        # If user exists - show message
         if existing_user:
             flash("USER ALREADY EXISTS")
             return redirect(url_for("register"))
         
-        # Check if passwords match
         password = request.form.get("password")
         password_repeat = request.form.get("password_repeat")
         if password != password_repeat:
             flash("Passwords do not match")
             return redirect(url_for("register"))
         
-        # Validate password strength
         if not validate_password(password):
             flash("Password must be between 6 and 20 characters long, contain at least one uppercase letter, one number, and one special character.")
             return redirect(url_for("register"))
 
-        # If passwords match and valid, proceed with registration
         register = {
             "first_name": request.form.get("first_name").capitalize(),
             "last_name": request.form.get("last_name").capitalize(),
@@ -72,60 +59,42 @@ def register():
         }
         mongo.db.users.insert_one(register)
 
-        # Put the new user into 'session' cookie
         session["user"] = request.form.get("email").lower()
         flash("Registration Successful!")
         return redirect(url_for("get_cards"))
 
     return render_template("register.html")
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # Check if user exists in db
-        existing_user = mongo.db.users.find_one(
-            {"email": request.form.get("email").lower()})
+        existing_user = mongo.db.users.find_one({"email": request.form.get("email").lower()})
 
         if existing_user:
-            # Ensure hashed password matches user input
-            if check_password_hash(
-                existing_user["password"], request.form.get("password")):
-                    session["user"] = existing_user["email"]
-                    flash("Welcome, {}".format(existing_user["first_name"]))
-                    return redirect(url_for("get_cards"))
+            if check_password_hash(existing_user["password"], request.form.get("password")):
+                session["user"] = existing_user["email"]
+                flash("Welcome, {}".format(existing_user["first_name"]))
+                return redirect(url_for("get_cards"))
 
-            else:
-                # Invalid password
-                flash("Incorrect email and/or password!")
-                return redirect(url_for("login"))
-
-        else:
-            # User doesn't exist
             flash("Incorrect email and/or password!")
             return redirect(url_for("login"))
 
-    return render_template("login.html")
+        flash("Incorrect email and/or password!")
+        return redirect(url_for("login"))
 
+    return render_template("login.html")
 
 @app.route("/profile/<email>")
 def profile(email):
-    # Checks if the user is logged in and if the logged-in 
-    # user's email matches the email in the URL
     if "user" in session and session["user"] == email:
         user = mongo.db.users.find_one({"email": email})
         if user:
-            # If the user is found in the database
             return render_template("profile.html", user=user)
-        else:
-            # If no user is found, flash a message and redirect to the login page
-            flash("User not found.")
-            return redirect(url_for("login"))
-    else:
-        # If the user is not logged in or trying to access a different user's profile
-        flash("You need to log in to view your profile.")
+        flash("User not found.")
         return redirect(url_for("login"))
-
+    
+    flash("You need to log in to view your profile.")
+    return redirect(url_for("login"))
 
 @app.context_processor
 def inject_user():
@@ -140,13 +109,11 @@ def update_email_page(email):
         user = mongo.db.users.find_one({"email": email})
         if user:
             return render_template("profile-update.html", user=user)
-        else:
-            flash("User not found.")
-            return redirect(url_for("login"))
+        flash("User not found.")
+        return redirect(url_for("login"))
     else:
         flash("You need to log in to update your email.")
         return redirect(url_for("login"))
-
 
 @app.route("/update_email/<email>", methods=["POST"])
 def update_email(email):
@@ -169,35 +136,26 @@ def update_email(email):
         flash("You need to log in to update your email.")
         return redirect(url_for("login"))
 
-
 @app.route("/logout")
 def logout():
-    # Remove user from session cookies
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
 
-# Function to convert MongoDB documents to JSON-serializable format
-def convert_objectid_to_string(doc):
-    doc['_id'] = str(doc['_id'])
-    return doc
+@app.route("/loading")
+def loading():
+    return render_template("loading.html")
 
-# New route to handle the reading request
-@app.route("/tarot_reading", methods=["POST"])
-def tarot_reading():
+@app.route("/process_tarot_reading", methods=["POST"])
+def process_tarot_reading():
     try:
-        user_choice = request.form.get("tarot_choice")
-        user_question = request.form.get("question")
+        data = request.json
+        user_choice = data.get("tarot_choice")
+        user_question = data.get("question")
         user = mongo.db.users.find_one({"email": session["user"]})
 
-        # Log incoming data
-        logging.debug(f"user_choice: {user_choice}, user_question: {user_question}, user: {user}")
-
-        # Fetch cards from database
         cards = list(mongo.db.tarotCards.find())
-        logging.debug(f"Fetched {len(cards)} cards from the database")
 
-        # Select cards based on user's choice
         if user_choice == "General":
             selected_cards = random.sample(cards, 3)
         elif user_choice == "Love":
@@ -205,16 +163,10 @@ def tarot_reading():
         elif user_choice == "Career":
             selected_cards = random.sample(cards, 6)
         else:
-            flash("Invalid choice")
-            return redirect(url_for("get_cards"))
+            return jsonify({"success": False, "message": "Invalid choice"})
 
-        # Log selected cards
-        logging.debug(f"Selected cards: {selected_cards}")
-
-        # Convert ObjectId to string for JSON serialization
         selected_cards = [convert_objectid_to_string(card) for card in selected_cards]
 
-        # Prepare the messages for ChatGPT
         messages = [
             {
                 "role": "system",
@@ -223,7 +175,7 @@ def tarot_reading():
             {
                 "role": "user",
                 "content": f"""
-                User's name: {user['first_name']} {user['last_name']}
+                User's name: {user['first_name']}
                 Date of birth: {user['date_of_birth']}
                 Time of birth: {user['time_of_birth']}
                 Place of birth: {user['place_of_birth']}
@@ -239,7 +191,6 @@ def tarot_reading():
             }
         ]
 
-        # ChatGPT API call
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=messages
@@ -247,31 +198,14 @@ def tarot_reading():
 
         reading_output = response['choices'][0]['message']['content']
 
-        # Store the selected cards and reading output in the session
-        session["selected_cards"] = selected_cards
-        session["reading_output"] = reading_output
-
-        # Log the session variables
-        logging.debug(f"Session selected_cards: {session['selected_cards']}")
-        logging.debug(f"Session reading_output: {session['reading_output']}")
-
-        return jsonify({
-            "selected_cards": selected_cards,
-            "reading_output": reading_output
-        })
+        return jsonify({"success": True, "selected_cards": selected_cards, "reading_output": reading_output})
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
-        return jsonify({"error": "An internal error occurred"}), 500
-
+        return jsonify({"success": False, "message": str(e)}), 500
 
 @app.route("/reading")
 def reading():
     cards = session.get("selected_cards", [])
     reading_output = session.get("reading_output", "")
-
-    # Log the session variables
-    logging.debug(f"Session cards: {cards}")
-    logging.debug(f"Session reading_output: {reading_output}")
 
     if not cards or not reading_output:
         flash("No reading found. Please submit your question again.")
@@ -279,6 +213,9 @@ def reading():
 
     return render_template("reading.html", cards=cards, reading_output=reading_output)
 
+def convert_objectid_to_string(doc):
+    doc['_id'] = str(doc['_id'])
+    return doc
 
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
