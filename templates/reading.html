@@ -1,24 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-
 <div class="container reading-page">
     <h1 class="center-align grey-text text-lighten-5">Your Tarot Reading</h1>
-    
-    <!-- Loading Image -->
-    <div id="shuffling-image" class="center-align" style="display: none;">
-        <img src="/static/images/giphy.webp" alt="Shuffling cards...">
-        <p class="grey-text text-lighten-5">Think about your question... Focus... I'm shuffling the deck.</p>
-    </div>
 
-    <div id="cards-container" class="card-container" style="display:none;">
+    <div id="cards-container" class="card-container">
         <!-- Cards will be dynamically injected here -->
     </div>
-    <div class="row" id="reading-result" style="display:none;">
+    <div class="row" id="reading-result">
         <div class="col s12">
             <h2 class="center-align grey-text text-lighten-5">Reading Output</h2>
             <p class="grey-text text-lighten-5" id="reading-output">{{ reading_output }}</p>
         </div>
     </div>
 </div>
-
 {% endblock %}

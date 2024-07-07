@@ -12,6 +12,7 @@ if os.path.exists("env.py"):
 
 app = Flask(__name__)
 
+# Flask app configuration
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -19,16 +20,19 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
+# Password validation function
 def validate_password(password):
     pattern = r"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\\|,.<>\/?]).{6,20}$"
     return re.match(pattern, password) is not None
 
+# Home route to get cards
 @app.route("/")
 @app.route("/get_cards")
 def get_cards():
     cards = list(mongo.db.tarotCards.find())
     return render_template("index.html", cards=cards)
 
+# User registration route
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -65,6 +69,7 @@ def register():
 
     return render_template("register.html")
 
+# User login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -84,6 +89,7 @@ def login():
 
     return render_template("login.html")
 
+# User profile route
 @app.route("/profile/<email>")
 def profile(email):
     if "user" in session and session["user"] == email:
@@ -96,6 +102,7 @@ def profile(email):
     flash("You need to log in to view your profile.")
     return redirect(url_for("login"))
 
+# Inject logged in user into templates
 @app.context_processor
 def inject_user():
     if "user" in session:
@@ -103,6 +110,7 @@ def inject_user():
         return dict(logged_in_user=user)
     return dict(logged_in_user=None)
 
+# Route to update email page
 @app.route("/update_email_page/<email>")
 def update_email_page(email):
     if "user" in session and session["user"] == email:
@@ -115,6 +123,7 @@ def update_email_page(email):
         flash("You need to log in to update your email.")
         return redirect(url_for("login"))
 
+# Update email logic
 @app.route("/update_email/<email>", methods=["POST"])
 def update_email(email):
     if "user" in session and session["user"] == email:
@@ -136,16 +145,19 @@ def update_email(email):
         flash("You need to log in to update your email.")
         return redirect(url_for("login"))
 
+# User logout route
 @app.route("/logout")
 def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
 
+# Loading page route
 @app.route("/loading")
 def loading():
     return render_template("loading.html")
 
+# Process tarot reading request
 @app.route("/process_tarot_reading", methods=["POST"])
 def process_tarot_reading():
     try:
@@ -202,6 +214,7 @@ def process_tarot_reading():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
+# Route to display tarot reading
 @app.route("/reading")
 def reading():
     cards = session.get("selected_cards", [])
@@ -213,10 +226,12 @@ def reading():
 
     return render_template("reading.html", cards=cards, reading_output=reading_output)
 
+# Convert ObjectId to string
 def convert_objectid_to_string(doc):
     doc['_id'] = str(doc['_id'])
     return doc
 
+# Run the app
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),

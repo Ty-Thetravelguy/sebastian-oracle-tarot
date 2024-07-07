@@ -54,27 +54,13 @@ $(document).ready(function() {
 
     $('#password, #password_repeat').on('input', validatePassword);
 
-    // Password hover logic
-    $('#password, #password_repeat').hover(function() {
-        $(this).attr('title', 'Password must be between 6 and 20 characters long, contain at least one uppercase letter, one number, and one special character.');
-    });
-
     // Form submission logic
     $('#tarot-form').on('submit', function(event) {
-        const password = $('#password').val();
-        const passwordRepeat = $('#password_repeat').val();
-        const requirementsPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]).{6,20}$/;
-
-        // Check if passwords match and meet requirements
-        if (password !== passwordRepeat || !requirementsPattern.test(password)) {
-            event.preventDefault();
-            alert('Passwords do not match or do not meet the requirements. Please try again.');
-            return false;
-        }
-
-        // Save form data to local storage
+        event.preventDefault(); // Prevent default form submission
         const form = event.target;
         const formData = new FormData(form);
+
+        // Save form data to local storage
         localStorage.setItem('tarot_choice', formData.get('tarot_choice'));
         localStorage.setItem('question', formData.get('question'));
 
@@ -85,7 +71,6 @@ $(document).ready(function() {
     // Load tarot reading data
     if (window.location.pathname === '/reading') {
         const data = localStorage.getItem('tarotReadingData');
-        console.log("Loaded tarot reading data from localStorage:", data); // Debug log
 
         if (data) {
             const parsedData = JSON.parse(data);
@@ -111,15 +96,13 @@ $(document).ready(function() {
                     cardContainer.find('.row').last().append(cardElement);
                 });
                 $('#reading-output').text(parsedData.reading_output);
-                $('#shuffling-image').hide(); // Hide the shuffling image
-                $('#cards-container').show();
-                $('#reading-result').show();
+
             } else {
-                console.error("Tarot reading data is missing or malformed:", parsedData); // Debug log
+                console.error("Tarot reading data is missing or malformed:", parsedData);
                 alert('An error occurred while loading your tarot reading. Please try again.');
             }
         } else {
-            console.error("No tarot reading data found in localStorage."); // Debug log
+            console.error("No tarot reading data found in localStorage.");
             alert('An error occurred while loading your tarot reading. Please try again.');
         }
     }
