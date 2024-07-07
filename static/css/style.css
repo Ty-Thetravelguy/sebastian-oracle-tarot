@@ -126,20 +126,9 @@ h1{
 }
 
 
-.card-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.card-row {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.card-row .col {
-    margin: 0 10px; /* Adjust margin as needed */
+.card {
+    width: 189.328px;
+    height: 424.453px;
 }
 
 
