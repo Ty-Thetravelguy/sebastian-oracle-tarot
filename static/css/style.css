@@ -125,6 +125,13 @@ h1{
     color: #fafafa;
 }
 
+#password_message,
+#password_match_message {
+    color: #fafafa;
+}
+
+
+/****************************Reading page**************************/
 
 .card {
     width: 189.328px;
