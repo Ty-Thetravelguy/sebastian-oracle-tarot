@@ -97,6 +97,9 @@ $(document).ready(function() {
                 });
                 $('#reading-output').text(parsedData.reading_output);
 
+                // Show save reading button after rendering the reading
+                $('#save-reading-btn').show();
+
             } else {
                 console.error("Tarot reading data is missing or malformed:", parsedData);
                 alert('An error occurred while loading your tarot reading. Please try again.');
@@ -125,8 +128,8 @@ $(document).ready(function() {
                 localStorage.setItem('tarotReadingData', JSON.stringify(data));
                 window.location.href = '/reading';
             } else {
-                alert('An error occurred while processing your request. Please try again.');
-                window.location.href = '/';
+                alert('Please login or register.');
+                window.location.href = '/login';
             }
         }).catch((error) => {
             console.error('Error:', error);
@@ -144,5 +147,43 @@ $(document).ready(function() {
         // Clear local storage items related to the form
         localStorage.removeItem('tarot_choice');
         localStorage.removeItem('question');
+    });
+
+    // Initialize collapsible for saved readings
+    if (window.location.pathname === '/saved_readings') {
+        $('.collapsible').collapsible();
+        $('.journal-btn').on('click', function() {
+            // Redirect to the journal page
+            window.location.href = '/journal';
+        });
+    }
+
+    // Save reading button click handler
+    $('#save-reading-btn').on('click', function() {
+        const readingDate = new Date().toLocaleDateString();
+        const questionAsked = localStorage.getItem('question');
+        const readingData = $('#reading-output').text();
+
+        fetch('/save_reading', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                readingDate: readingDate,
+                questionAsked: questionAsked,
+                readingData: readingData
+            })
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reading saved successfully.');
+                } else {
+                    alert('Error saving reading: ' + data.message);
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while saving your reading. Please try again.');
+            });
     });
 });

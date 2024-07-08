@@ -6,24 +6,31 @@ from flask import Flask, render_template, redirect, url_for, flash, session, req
 from flask_pymongo import PyMongo
 from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
 
 if os.path.exists("env.py"):
     import env
 
+
 app = Flask(__name__)
+
 
 # Flask app configuration
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
+
 mongo = PyMongo(app)
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+
 
 # Password validation function
 def validate_password(password):
     pattern = r"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\\|,.<>\/?]).{6,20}$"
     return re.match(pattern, password) is not None
+
 
 # Home route to get cards
 @app.route("/")
@@ -31,6 +38,7 @@ def validate_password(password):
 def get_cards():
     cards = list(mongo.db.tarotCards.find())
     return render_template("index.html", cards=cards)
+
 
 # User registration route
 @app.route("/register", methods=["GET", "POST"])
@@ -69,6 +77,7 @@ def register():
 
     return render_template("register.html")
 
+
 # User login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -89,6 +98,7 @@ def login():
 
     return render_template("login.html")
 
+
 # User profile route
 @app.route("/profile/<email>")
 def profile(email):
@@ -102,6 +112,7 @@ def profile(email):
     flash("You need to log in to view your profile.")
     return redirect(url_for("login"))
 
+
 # Inject logged in user into templates
 @app.context_processor
 def inject_user():
@@ -109,6 +120,7 @@ def inject_user():
         user = mongo.db.users.find_one({"email": session["user"]})
         return dict(logged_in_user=user)
     return dict(logged_in_user=None)
+
 
 # Route to update email page
 @app.route("/update_email_page/<email>")
@@ -122,6 +134,7 @@ def update_email_page(email):
     else:
         flash("You need to log in to update your email.")
         return redirect(url_for("login"))
+
 
 # Update email logic
 @app.route("/update_email/<email>", methods=["POST"])
@@ -145,6 +158,7 @@ def update_email(email):
         flash("You need to log in to update your email.")
         return redirect(url_for("login"))
 
+
 # User logout route
 @app.route("/logout")
 def logout():
@@ -152,10 +166,12 @@ def logout():
     session.pop("user")
     return redirect(url_for("login"))
 
+
 # Loading page route
 @app.route("/loading")
 def loading():
     return render_template("loading.html")
+
 
 # Process tarot reading request
 @app.route("/process_tarot_reading", methods=["POST"])
@@ -210,9 +226,14 @@ def process_tarot_reading():
 
         reading_output = response['choices'][0]['message']['content']
 
+        # Store the reading data in session
+        session["selected_cards"] = selected_cards
+        session["reading_output"] = reading_output
+
         return jsonify({"success": True, "selected_cards": selected_cards, "reading_output": reading_output})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
 
 # Route to display tarot reading
 @app.route("/reading")
@@ -226,10 +247,38 @@ def reading():
 
     return render_template("reading.html", cards=cards, reading_output=reading_output)
 
+
 # Convert ObjectId to string
 def convert_objectid_to_string(doc):
     doc['_id'] = str(doc['_id'])
     return doc
+
+
+# Save reading route
+@app.route("/save_reading", methods=["POST"])
+def save_reading():
+    if "user" in session:
+        data = request.json
+        reading = {
+            "user": session["user"],
+            "readingDate": data.get("readingDate"),
+            "questionAsked": data.get("questionAsked"),
+            "readingData": data.get("readingData")
+        }
+        mongo.db.savedReadings.insert_one(reading)
+        return jsonify({"success": True, "message": "Reading saved successfully."})
+    return jsonify({"success": False, "message": "User not logged in."}), 403
+
+
+# Display saved readings route
+@app.route("/saved_readings")
+def saved_readings():
+    if "user" in session:
+        user_readings = list(mongo.db.savedReadings.find({"user": session["user"]}))
+        return render_template("saved_readings.html", readings=user_readings)
+    flash("You need to log in to view your saved readings.")
+    return redirect(url_for("login"))
+
 
 # Run the app
 if __name__ == "__main__":

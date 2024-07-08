@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container saved-readings-page">
+    <h1 class="center-align grey-text text-lighten-5">Saved Readings</h1>
+    <ul class="collapsible popout">
+        {% for reading in readings %}
+        <li>
+            <div class="collapsible-header">
+                <i class="material-icons">event_note</i>
+                {{ reading.readingDate }} - {{ reading.questionAsked }}
+            </div>
+            <div class="collapsible-body">
+                <p>{{ reading.readingData }}</p>
+                <button class="btn journal-btn">Go to Journal</button>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
