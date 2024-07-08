@@ -225,6 +225,10 @@ def process_tarot_reading():
 
         reading_output = response['choices'][0]['message']['content']
 
+        # Save reading data to session
+        session["selected_cards"] = selected_cards
+        session["reading_output"] = reading_output
+
         return jsonify({"success": True, "selected_cards": selected_cards, "reading_output": reading_output})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
