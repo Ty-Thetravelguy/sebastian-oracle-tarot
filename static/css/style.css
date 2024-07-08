@@ -42,7 +42,7 @@ h1{
 .register-page .light-color-text,
 .register-page .dropdown-content li>a, 
 .register-page .dropdown-content li>span {
-    color: #2F4858;
+    color: #fafafa;
     font-weight: 500;
 }
 
@@ -64,7 +64,8 @@ h1{
 }
 
 .datepicker-table abbr{
-    color: #2F4858;
+    color: #fafafa;
+    font-weight: 500;
 }
 
 .timepicker-canvas line {
