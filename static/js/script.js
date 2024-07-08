@@ -97,9 +97,6 @@ $(document).ready(function() {
                 });
                 $('#reading-output').text(parsedData.reading_output);
 
-                // Show save reading button after rendering the reading
-                $('#save-reading-btn').show();
-
             } else {
                 console.error("Tarot reading data is missing or malformed:", parsedData);
                 alert('An error occurred while loading your tarot reading. Please try again.');
@@ -185,5 +182,38 @@ $(document).ready(function() {
                 console.error('Error:', error);
                 alert('An error occurred while saving your reading. Please try again.');
             });
+    });
+
+    // Delete reading button click handler
+    let readingToDelete = null;
+    $(document).on('click', '.delete-reading-btn', function() {
+        readingToDelete = $(this).data('reading-id');
+        $('#delete-modal').modal('open');
+    });
+
+    // Confirm delete reading
+    $('#confirm-delete-btn').on('click', function() {
+        if (readingToDelete) {
+            fetch('/delete_reading', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    readingId: readingToDelete
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Reading deleted successfully.');
+                        location.reload(); // Reload the page to update the list
+                    } else {
+                        alert('Error deleting reading: ' + data.message);
+                    }
+                }).catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting your reading. Please try again.');
+                });
+        }
     });
 });

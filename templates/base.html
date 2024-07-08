@@ -37,7 +37,7 @@
       <li>
         <div class="divider"></div>
       </li>
-      <li><a href="{{ url_for('saved_readings') }}" class=
+      <li><a href="{{ url_for('saved_readings', email=session['user']) }}" class=
         "grey-text text-lighten-3"><i class="material-icons grey-text text-lighten-3">save</i>
         Saved Readings</a></li>
       <li>

@@ -254,30 +254,56 @@ def convert_objectid_to_string(doc):
     return doc
 
 
-# Save reading route
 @app.route("/save_reading", methods=["POST"])
 def save_reading():
-    if "user" in session:
+    try:
         data = request.json
+        reading_date = data.get("readingDate")
+        question_asked = data.get("questionAsked")
+        reading_data = data.get("readingData")
+
         reading = {
-            "user": session["user"],
-            "readingDate": data.get("readingDate"),
-            "questionAsked": data.get("questionAsked"),
-            "readingData": data.get("readingData")
+            "email": session["user"],
+            "readingDate": reading_date,
+            "questionAsked": question_asked,
+            "readingData": reading_data
         }
+
         mongo.db.savedReadings.insert_one(reading)
-        return jsonify({"success": True, "message": "Reading saved successfully."})
-    return jsonify({"success": False, "message": "User not logged in."}), 403
+
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
 
-# Display saved readings route
-@app.route("/saved_readings")
-def saved_readings():
-    if "user" in session:
-        user_readings = list(mongo.db.savedReadings.find({"user": session["user"]}))
-        return render_template("saved_readings.html", readings=user_readings)
-    flash("You need to log in to view your saved readings.")
-    return redirect(url_for("login"))
+@app.route("/saved_readings/<email>")
+def saved_readings(email):
+    if "user" in session and session["user"] == email:
+        saved_readings = list(mongo.db.savedReadings.find({"email": email}))
+        for reading in saved_readings:
+            try:
+                reading_date = datetime.strptime(reading["readingDate"], "%d/%m/%Y")  # Adjust the date format accordingly
+                reading["formatted_readingDate"] = reading_date.strftime("%-d %b, %Y")  # Format the date
+            except ValueError:
+                reading["formatted_readingDate"] = reading["readingDate"]  # In case the date format is unexpected
+
+        return render_template("saved_readings.html", saved_readings=saved_readings)
+    else:
+        flash("You need to log in to view your saved readings.")
+        return redirect(url_for("login"))
+
+
+@app.route("/delete_reading", methods=["POST"])
+def delete_reading():
+    try:
+        data = request.json
+        reading_id = data.get("readingId")
+
+        mongo.db.savedReadings.delete_one({"_id": ObjectId(reading_id), "email": session["user"]})
+
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
 
 # Run the app

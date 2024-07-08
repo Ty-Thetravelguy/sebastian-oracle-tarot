@@ -139,6 +139,20 @@ h1{
 }
 
 
+/****************************Saved reading page**************************/
+
+.saved-reading-buttons {
+    margin-top: 20px;
+}
+
+
+.collapsible-header {
+    background-color: #2F4858;
+    color: #fafafa;
+}
+
+
+
 /****************************Media Queries**************************/
 
 @media (max-width:1440px) {

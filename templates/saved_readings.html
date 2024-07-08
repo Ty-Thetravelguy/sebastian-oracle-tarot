@@ -1,20 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container saved-readings-page">
+<div class="container">
     <h1 class="center-align grey-text text-lighten-5">Saved Readings</h1>
     <ul class="collapsible popout">
-        {% for reading in readings %}
+        {% for reading in saved_readings %}
         <li>
             <div class="collapsible-header">
-                <i class="material-icons">event_note</i>
-                {{ reading.readingDate }} - {{ reading.questionAsked }}
+                <i class="material-icons">folder</i>{{ reading.formatted_readingDate }} - {{ reading.questionAsked }}
             </div>
             <div class="collapsible-body">
-                <p>{{ reading.readingData }}</p>
-                <button class="btn journal-btn">Go to Journal</button>
+                <span class="grey-text text-lighten-5">{{ reading.readingData }}</span>
+                <div class="row saved-reading-buttons">
+                    <div class="col s12">
+                        <button class="btn waves-effect waves-light red delete-reading-btn" data-reading-id="{{ reading._id }}">Delete Reading</button>
+                    </div>
+                </div>
             </div>
         </li>
         {% endfor %}
     </ul>
+
+    <!-- Modal Structure -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <h4>Confirm Deletion</h4>
+            <p>Are you sure you want to delete this reading? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button id="confirm-delete-btn" class="modal-close waves-effect waves-green btn-flat">Delete</button>
+            <button class="modal-close waves-effect waves-red btn-flat">Cancel</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
