@@ -2,12 +2,11 @@ import os
 import re
 import random
 import openai
+import datetime  # Ensure datetime is imported correctly
 from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_pymongo import PyMongo
 from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
-
 
 if os.path.exists("env.py"):
     import env
@@ -226,10 +225,6 @@ def process_tarot_reading():
 
         reading_output = response['choices'][0]['message']['content']
 
-        # Store the reading data in session
-        session["selected_cards"] = selected_cards
-        session["reading_output"] = reading_output
-
         return jsonify({"success": True, "selected_cards": selected_cards, "reading_output": reading_output})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
@@ -248,12 +243,7 @@ def reading():
     return render_template("reading.html", cards=cards, reading_output=reading_output)
 
 
-# Convert ObjectId to string
-def convert_objectid_to_string(doc):
-    doc['_id'] = str(doc['_id'])
-    return doc
-
-
+# Save reading route
 @app.route("/save_reading", methods=["POST"])
 def save_reading():
     try:
@@ -261,49 +251,59 @@ def save_reading():
         reading_date = data.get("readingDate")
         question_asked = data.get("questionAsked")
         reading_data = data.get("readingData")
+        category = data.get("category")  # Add this line to get the category from the request
 
-        reading = {
-            "email": session["user"],
+        user = mongo.db.users.find_one({"email": session["user"]})
+
+        saved_reading = {
+            "user_id": user["_id"],
             "readingDate": reading_date,
             "questionAsked": question_asked,
-            "readingData": reading_data
+            "readingData": reading_data,
+            "category": category  # Save the category to the database
         }
-
-        mongo.db.savedReadings.insert_one(reading)
+        mongo.db.savedReadings.insert_one(saved_reading)
 
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-@app.route("/saved_readings/<email>")
-def saved_readings(email):
-    if "user" in session and session["user"] == email:
-        saved_readings = list(mongo.db.savedReadings.find({"email": email}))
-        for reading in saved_readings:
-            try:
-                reading_date = datetime.strptime(reading["readingDate"], "%d/%m/%Y")  # Adjust the date format accordingly
-                reading["formatted_readingDate"] = reading_date.strftime("%-d %b, %Y")  # Format the date
-            except ValueError:
-                reading["formatted_readingDate"] = reading["readingDate"]  # In case the date format is unexpected
-
-        return render_template("saved_readings.html", saved_readings=saved_readings)
-    else:
-        flash("You need to log in to view your saved readings.")
-        return redirect(url_for("login"))
-
-
+# Delete reading route
 @app.route("/delete_reading", methods=["POST"])
 def delete_reading():
     try:
         data = request.json
         reading_id = data.get("readingId")
 
-        mongo.db.savedReadings.delete_one({"_id": ObjectId(reading_id), "email": session["user"]})
+        mongo.db.savedReadings.delete_one({"_id": ObjectId(reading_id)})
 
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
+
+# Route to get saved readings
+@app.route("/saved_readings/<email>")
+def saved_readings(email):
+    if "user" in session and session["user"] == email:
+        user = mongo.db.users.find_one({"email": email})
+        if user:
+            saved_readings = list(mongo.db.savedReadings.find({"user_id": user["_id"]}))
+            for reading in saved_readings:
+                reading["_id"] = str(reading["_id"])
+                reading["formatted_readingDate"] = datetime.datetime.strptime(reading["readingDate"], "%d/%m/%Y").strftime("%d %b, %Y")
+            return render_template("saved_readings.html", saved_readings=saved_readings)
+        flash("User not found.")
+        return redirect(url_for("login"))
+    flash("You need to log in to view your saved readings.")
+    return redirect(url_for("login"))
+
+
+# Convert ObjectId to string
+def convert_objectid_to_string(doc):
+    doc['_id'] = str(doc['_id'])
+    return doc
 
 
 # Run the app

@@ -160,6 +160,7 @@ $(document).ready(function() {
         const readingDate = new Date().toLocaleDateString();
         const questionAsked = localStorage.getItem('question');
         const readingData = $('#reading-output').text();
+        const category = localStorage.getItem('tarot_choice'); // Add this line to get the tarot choice
 
         fetch('/save_reading', {
             method: 'POST',
@@ -169,7 +170,8 @@ $(document).ready(function() {
             body: JSON.stringify({
                 readingDate: readingDate,
                 questionAsked: questionAsked,
-                readingData: readingData
+                readingData: readingData,
+                category: category // Include category in the payload
             })
         }).then(response => response.json())
             .then(data => {

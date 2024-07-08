@@ -6,7 +6,8 @@
         {% for reading in saved_readings %}
         <li>
             <div class="collapsible-header">
-                <i class="material-icons">folder</i>{{ reading.formatted_readingDate }} - {{ reading.questionAsked }}
+                <i class="material-icons">folder</i>
+                {{ reading.formatted_readingDate }} - Catagory: {{ reading.category }} - {{ reading.questionAsked }}
             </div>
             <div class="collapsible-body">
                 <span class="grey-text text-lighten-5">{{ reading.readingData }}</span>

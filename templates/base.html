@@ -19,7 +19,7 @@
 
 <body>
   <header>
-    <ul id="slide-out" class="sidenav blue-grey darken-4">
+    <ul id="slide-out" class="sidenav sidenav-fixed blue-grey darken-4">
       {% if session.user %}
       <li>
         <div class="user-view">
@@ -37,9 +37,8 @@
       <li>
         <div class="divider"></div>
       </li>
-      <li><a href="{{ url_for('saved_readings', email=session['user']) }}" class=
-        "grey-text text-lighten-3"><i class="material-icons grey-text text-lighten-3">save</i>
-        Saved Readings</a></li>
+      <li><a href="{{ url_for('saved_readings', email=session['user']) }}" class="grey-text text-lighten-3"><i
+            class="material-icons grey-text text-lighten-3">save</i>Saved Readings</a></li>
       <li>
         <div class="divider"></div>
       </li>
@@ -64,7 +63,7 @@
       <li>
         {% endif %}
     </ul>
-    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons custom-hamburger">menu</i></a>
+    <a href="#" data-target="slide-out" class="sidenav-trigger show-on-medium-and-down"><i class="material-icons custom-hamburger">menu</i></a>
   </header>
 
   <section>
@@ -73,7 +72,7 @@
     {% if messages %}
     {% for message in messages %}
     <div class="row flashes">
-      <h4 class="center-align grey-text text-lighten-5">{{ message}}</h4>
+      <h4 class="center-align grey-text text-lighten-5">{{ message }}</h4>
     </div>
     {% endfor %}
     {% endif %}
