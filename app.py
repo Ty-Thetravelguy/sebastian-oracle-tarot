@@ -293,7 +293,7 @@ def save_reading():
         }
         mongo.db.savedReadings.insert_one(saved_reading)
 
-        return jsonify({"success": True})
+        return jsonify({"success": True, "redirect_url": url_for('saved_readings', email=session["user"])})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
@@ -371,6 +371,27 @@ def delete_journal():
         )
 
         return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# Delete account route
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    try:
+        if "user" in session:
+            user_email = session["user"]
+            # Delete user data
+            mongo.db.users.delete_one({"email": user_email})
+            # Delete user saved readings
+            user = mongo.db.users.find_one({"email": user_email})
+            if user:
+                mongo.db.savedReadings.delete_many({"user_id": user["_id"]})
+            session.pop("user")
+            flash("Your account has been deleted.")
+            return jsonify({"success": True, "redirect_url": url_for("login")})
+        else:
+            return jsonify({"success": False, "message": "User not logged in."}), 401
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 

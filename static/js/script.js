@@ -177,6 +177,7 @@ $(document).ready(function() {
             .then(data => {
                 if (data.success) {
                     alert('Reading saved successfully.');
+                    window.location.href = data.redirect_url; // Redirect to saved readings page
                 } else {
                     alert('Error saving reading: ' + data.message);
                 }
@@ -293,6 +294,47 @@ $(document).ready(function() {
                 console.error('Error:', error);
                 alert('An error occurred while deleting your journal entry. Please try again.');
             });
+        }
+    });
+
+    // Delete account button click handler
+    $('.delete-account-btn').on('click', function() {
+        $('#delete-account-modal').modal('open');
+    });
+
+    // Enable the confirm delete account button only if the input is "DELETE"
+    $('#delete-account-confirmation').on('input', function() {
+        const confirmationInput = $(this).val();
+        if (confirmationInput === 'DELETE') {
+            $('#confirm-delete-account-btn').removeAttr('disabled');
+        } else {
+            $('#confirm-delete-account-btn').attr('disabled', 'disabled');
+        }
+    });
+
+    // Confirm delete account
+    $('#confirm-delete-account-btn').on('click', function() {
+        const confirmationInput = $('#delete-account-confirmation').val();
+        if (confirmationInput === 'DELETE') {
+            fetch('/delete_account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Account deleted successfully.');
+                    window.location.href = data.redirect_url; // Redirect to login page
+                } else {
+                    alert('Error deleting account: ' + data.message);
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting your account. Please try again.');
+            });
+        } else {
+            alert('Please type DELETE to confirm.');
         }
     });
 

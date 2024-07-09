@@ -57,6 +57,25 @@
                     <p class="left-align grey-text text-lighten-5">{{ user.place_of_birth }}</p>
                 </div>
             </div>
+            <div class="row">
+                <div class="col s12 center-align">
+                    <button class="btn waves-effect waves-light red delete-account-btn">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal Structure -->
+    <div id="delete-account-modal" class="modal">
+        <div class="modal-content">
+            <h4>Confirm Account Deletion</h4>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <p>Please type <strong>DELETE</strong> to confirm.</p>
+            <input type="text" id="delete-account-confirmation" placeholder="Type DELETE to confirm">
+        </div>
+        <div class="modal-footer">
+            <button id="confirm-delete-account-btn" class="modal-close waves-effect waves-green btn-flat" disabled>Delete</button>
+            <button class="modal-close waves-effect waves-red btn-flat">Cancel</button>
         </div>
     </div>
 </div>
