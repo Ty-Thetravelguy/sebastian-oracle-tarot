@@ -318,7 +318,7 @@ def saved_readings(email):
     if "user" in session and session["user"] == email:
         user = mongo.db.users.find_one({"email": email})
         if user:
-            saved_readings = list(mongo.db.savedReadings.find({"user_id": user["_id"]}))
+            saved_readings = list(mongo.db.savedReadings.find({"user_id": user["_id"]}).sort("readingDate", -1))
             for reading in saved_readings:
                 reading["_id"] = str(reading["_id"])
                 reading["formatted_readingDate"] = safe_parse_date(reading.get("readingDate"))
@@ -327,6 +327,7 @@ def saved_readings(email):
         return redirect(url_for("login"))
     flash("You need to log in to view your saved readings.")
     return redirect(url_for("login"))
+
 
 
 # Route to save journal entry
