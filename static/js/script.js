@@ -195,7 +195,8 @@ $(document).ready(function() {
 
     // Confirm delete reading
     $('#confirm-delete-btn').on('click', function() {
-        if (readingToDelete) {
+        const confirmationInput = $('#delete-confirmation').val();
+        if (readingToDelete && confirmationInput === 'DELETE') {
             fetch('/delete_reading', {
                 method: 'POST',
                 headers: {
@@ -207,7 +208,7 @@ $(document).ready(function() {
             }).then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Reading deleted successfully.');
+                        alert('Reading and journal deleted successfully.');
                         location.reload(); // Reload the page to update the list
                     } else {
                         alert('Error deleting reading: ' + data.message);
@@ -216,6 +217,83 @@ $(document).ready(function() {
                     console.error('Error:', error);
                     alert('An error occurred while deleting your reading. Please try again.');
                 });
+        } else {
+            alert('Please type DELETE to confirm.');
         }
     });
+
+    // Enable the confirm delete button only if the input is "DELETE"
+    $('#delete-confirmation').on('input', function() {
+        const confirmationInput = $(this).val();
+        if (confirmationInput === 'DELETE') {
+            $('#confirm-delete-btn').removeAttr('disabled');
+        } else {
+            $('#confirm-delete-btn').attr('disabled', 'disabled');
+        }
+    });
+
+    // Save journal entry button click handler
+    $(document).on('click', '.save-journal-btn', function() {
+        const readingId = $(this).data('reading-id');
+        const journalSubject = $(`#journal-subject-${readingId}`).val();
+        const journalDate = $(`#journal-date-${readingId}`).val();
+        const journalText = $(`#journal-text-${readingId}`).val();
+
+        fetch('/save_journal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                readingId: readingId,
+                journalSubject: journalSubject,
+                journalDate: journalDate,
+                journalText: journalText
+            })
+        }).then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Journal entry saved successfully.');
+            } else {
+                alert('Error saving journal entry: ' + data.message);
+            }
+        }).catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while saving your journal entry. Please try again.');
+        });
+    });
+
+    // Delete journal entry button click handler
+    let journalToDelete = null;
+    $(document).on('click', '.delete-journal-btn', function() {
+        journalToDelete = $(this).data('reading-id');
+        $('#delete-journal-modal').modal('open');
+    });
+
+    // Confirm delete journal
+    $('#confirm-delete-journal-btn').on('click', function() {
+        if (journalToDelete) {
+            fetch('/delete_journal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    readingId: journalToDelete
+                })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Journal entry deleted successfully.');
+                    location.reload(); // Reload the page to update the list
+                } else {
+                    alert('Error deleting journal entry: ' + data.message);
+                }
+            }).catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting your journal entry. Please try again.');
+            });
+        }
+    });
+
 });

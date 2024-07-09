@@ -7,13 +7,33 @@
         <li>
             <div class="collapsible-header">
                 <i class="material-icons">folder</i>
-                {{ reading.formatted_readingDate }} - Catagory: {{ reading.category }} - {{ reading.questionAsked }}
+                {{ reading.formatted_readingDate }} - Category: {{ reading.category }} - {{ reading.questionAsked }}
             </div>
             <div class="collapsible-body">
+                <h5 class="grey-text text-lighten-5 underline">Reading</h5>
                 <span class="grey-text text-lighten-5">{{ reading.readingData }}</span>
-                <div class="row saved-reading-buttons">
-                    <div class="col s12">
-                        <button class="btn waves-effect waves-light red delete-reading-btn" data-reading-id="{{ reading._id }}">Delete Reading</button>
+                <br>
+                <br>
+                <h5 class="grey-text text-lighten-5 underline">Journal</h5>
+                <div class="journal-section">
+                    <div class="input-field">
+                        <input type="text" id="journal-subject-{{ reading._id }}" class="validate grey-text text-lighten-5" value="{{ reading.journal_subject }}">
+                        <label class="grey-text text-lighten-5" for="journal-subject-{{ reading._id }}">Subject</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" class="datepicker grey-text text-lighten-5" id="journal-date-{{ reading._id }}" value="{{ reading.journal_date | default('today') }}">
+                        <label class="grey-text text-lighten-5" for="journal-date-{{ reading._id }}">Date</label>
+                    </div>
+                    <div class="input-field">
+                        <textarea id="journal-text-{{ reading._id }}" class="materialize-textarea validate grey-text text-lighten-5">{{ reading.journal_text }}</textarea>
+                        <label class="grey-text text-lighten-5" for="journal-text-{{ reading._id }}">Journal Entry</label>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <button class="btn waves-effect waves-light green save-journal-btn" data-reading-id="{{ reading._id }}">Save Journal</button>
+                            <button class="btn waves-effect waves-light red delete-journal-btn" data-reading-id="{{ reading._id }}">Delete Journal</button>
+                            <button class="btn waves-effect waves-light red delete-reading-btn right" data-reading-id="{{ reading._id }}">Delete Reading & Journal</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -21,16 +41,31 @@
         {% endfor %}
     </ul>
 
-    <!-- Modal Structure -->
+    <!-- Delete Reading Modal Structure -->
     <div id="delete-modal" class="modal">
         <div class="modal-content">
             <h4>Confirm Deletion</h4>
-            <p>Are you sure you want to delete this reading? This action cannot be undone.</p>
+            <p>Are you sure you want to delete this reading and journal? This action cannot be undone.</p>
+            <p>Please type <strong>DELETE</strong> to confirm.</p>
+            <input type="text" id="delete-confirmation" placeholder="Type DELETE to confirm">
         </div>
         <div class="modal-footer">
-            <button id="confirm-delete-btn" class="modal-close waves-effect waves-green btn-flat">Delete</button>
+            <button id="confirm-delete-btn" class="modal-close waves-effect waves-green btn-flat" disabled>Delete</button>
+            <button class="modal-close waves-effect waves-red btn-flat">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Delete Journal Modal Structure -->
+    <div id="delete-journal-modal" class="modal">
+        <div class="modal-content">
+            <h4>Confirm Journal Deletion</h4>
+            <p>Are you sure you want to delete this journal entry? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button id="confirm-delete-journal-btn" class="modal-close waves-effect waves-green btn-flat">Delete</button>
             <button class="modal-close waves-effect waves-red btn-flat">Cancel</button>
         </div>
     </div>
 </div>
 {% endblock %}
+

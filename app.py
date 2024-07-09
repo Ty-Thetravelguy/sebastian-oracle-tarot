@@ -329,6 +329,51 @@ def saved_readings(email):
     return redirect(url_for("login"))
 
 
+# Route to save journal entry
+@app.route("/save_journal", methods=["POST"])
+def save_journal():
+    try:
+        data = request.json
+        reading_id = data.get("readingId")
+        journal_subject = data.get("journalSubject")
+        journal_date = data.get("journalDate")
+        journal_text = data.get("journalText")
+
+        mongo.db.savedReadings.update_one(
+            {"_id": ObjectId(reading_id)},
+            {"$set": {
+                "journal_subject": journal_subject,
+                "journal_date": journal_date,
+                "journal_text": journal_text
+            }}
+        )
+
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# Route to delete journal entry
+@app.route("/delete_journal", methods=["POST"])
+def delete_journal():
+    try:
+        data = request.json
+        reading_id = data.get("readingId")
+
+        mongo.db.savedReadings.update_one(
+            {"_id": ObjectId(reading_id)},
+            {"$unset": {
+                "journal_subject": "",
+                "journal_date": "",
+                "journal_text": ""
+            }}
+        )
+
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
 # Convert ObjectId to string
 def convert_objectid_to_string(doc):
     doc['_id'] = str(doc['_id'])
