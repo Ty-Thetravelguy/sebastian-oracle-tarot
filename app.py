@@ -2,7 +2,7 @@ import os
 import re
 import random
 import openai
-import datetime  # Ensure datetime is imported correctly
+import datetime
 from flask import Flask, render_template, redirect, url_for, flash, session, request, jsonify
 from flask_pymongo import PyMongo
 from bson import ObjectId
@@ -11,24 +11,28 @@ from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
 
-
 app = Flask(__name__)
-
 
 # Flask app configuration
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
-
 mongo = PyMongo(app)
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-
 
 # Password validation function
 def validate_password(password):
     pattern = r"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\\|,.<>\/?]).{6,20}$"
     return re.match(pattern, password) is not None
+
+
+# Date parsing function
+def safe_parse_date(date_string):
+    try:
+        return datetime.datetime.strptime(date_string, "%Y-%m-%d").strftime("%B %d, %Y")
+    except Exception as e:
+        return date_string
 
 
 # Home route to get cards
@@ -172,22 +176,43 @@ def loading():
     return render_template("loading.html")
 
 
+# Form submission for tarot reading
+@app.route("/submit_tarot_form", methods=["POST"])
+def submit_tarot_form():
+    try:
+        tarot_choice = request.form.get("tarot_choice")
+        question = request.form.get("question")
+        
+        session["tarot_choice"] = tarot_choice
+        session["question"] = question
+        
+        return redirect(url_for("loading"))
+    except Exception as e:
+        flash("An error occurred while processing your request. Please try again.")
+        return redirect(url_for("get_cards"))
+
+
 # Process tarot reading request
 @app.route("/process_tarot_reading", methods=["POST"])
 def process_tarot_reading():
     try:
-        data = request.json
-        user_choice = data.get("tarot_choice")
-        user_question = data.get("question")
+        if "user" not in session:
+            return jsonify({"success": False, "message": "User not logged in"})
+        
+        tarot_choice = session.get("tarot_choice")
+        question = session.get("question")
         user = mongo.db.users.find_one({"email": session["user"]})
+
+        if not user:
+            return jsonify({"success": False, "message": "User not found"})
 
         cards = list(mongo.db.tarotCards.find())
 
-        if user_choice == "General":
+        if tarot_choice == "General":
             selected_cards = random.sample(cards, 3)
-        elif user_choice == "Love":
+        elif tarot_choice == "Love":
             selected_cards = random.sample(cards, 5)
-        elif user_choice == "Career":
+        elif tarot_choice == "Career":
             selected_cards = random.sample(cards, 6)
         else:
             return jsonify({"success": False, "message": "Invalid choice"})
@@ -206,14 +231,14 @@ def process_tarot_reading():
                 Date of birth: {user['date_of_birth']}
                 Time of birth: {user['time_of_birth']}
                 Place of birth: {user['place_of_birth']}
-                Question: {user_question}
-                Tarot spread: {"Three-Card Spread" if user_choice == "General" else "Five-Card Spread" if user_choice == "Love" else "Six-Card Spread"}
+                Question: {question}
+                Tarot spread: {"Three-Card Spread" if tarot_choice == "General" else "Five-Card Spread" if tarot_choice == "Love" else "Six-Card Spread"}
                 Card position past: {selected_cards[0]["cardName"]}
                 Card position present: {selected_cards[1]["cardName"]}
                 Card position future: {selected_cards[2]["cardName"]}
-                {"Card position advice: " + selected_cards[3]["cardName"] if user_choice in ["Love", "Career"] else ""}
-                {"Card position potential outcomes: " + selected_cards[4]["cardName"] if user_choice in ["Love", "Career"] else ""}
-                {"Card position cause: " + selected_cards[5]["cardName"] if user_choice == "Career" else ""}
+                {"Card position advice: " + selected_cards[3]["cardName"] if tarot_choice in ["Love", "Career"] else ""}
+                {"Card position potential outcomes: " + selected_cards[4]["cardName"] if tarot_choice in ["Love", "Career"] else ""}
+                {"Card position cause: " + selected_cards[5]["cardName"] if tarot_choice == "Career" else ""}
                 """
             }
         ]
@@ -255,7 +280,7 @@ def save_reading():
         reading_date = data.get("readingDate")
         question_asked = data.get("questionAsked")
         reading_data = data.get("readingData")
-        category = data.get("category")  # Add this line to get the category from the request
+        category = data.get("category")
 
         user = mongo.db.users.find_one({"email": session["user"]})
 
@@ -264,7 +289,7 @@ def save_reading():
             "readingDate": reading_date,
             "questionAsked": question_asked,
             "readingData": reading_data,
-            "category": category  # Save the category to the database
+            "category": category
         }
         mongo.db.savedReadings.insert_one(saved_reading)
 
@@ -296,7 +321,7 @@ def saved_readings(email):
             saved_readings = list(mongo.db.savedReadings.find({"user_id": user["_id"]}))
             for reading in saved_readings:
                 reading["_id"] = str(reading["_id"])
-                reading["formatted_readingDate"] = datetime.datetime.strptime(reading["readingDate"], "%d/%m/%Y").strftime("%d %b, %Y")
+                reading["formatted_readingDate"] = safe_parse_date(reading.get("readingDate"))
             return render_template("saved_readings.html", saved_readings=saved_readings)
         flash("User not found.")
         return redirect(url_for("login"))
