@@ -26,31 +26,57 @@ mongo = PyMongo(app)
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 
-# Password validation function
 def validate_password(password):
+    """
+    Validate a password to ensure it meets security requirements.
+    
+    Args:
+    password (str): The password to validate.
+    
+    Returns:
+    bool: True if the password is valid, False otherwise.
+    """
     pattern = r"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\\|,.<>\/?]).{6,20}$"
     return re.match(pattern, password) is not None
 
 
-# Date parsing function
 def safe_parse_date(date_string):
+    """
+    Safely parse a date string into a more readable format.
+    
+    Args:
+    date_string (str): The date string to parse.
+    
+    Returns:
+    str: The formatted date string, or the original string if parsing fails.
+    """
     try:
         return datetime.datetime.strptime(date_string, "%Y-%m-%d").strftime("%B %d, %Y")
     except Exception as e:
         return date_string
 
 
-# Home route to get cards
 @app.route("/")
 @app.route("/get_cards")
 def get_cards():
+    """
+    Home route to display all tarot cards.
+    
+    Returns:
+    HTML: Rendered index page with tarot cards.
+    """
     cards = list(mongo.db.tarotCards.find())
     return render_template("index.html", cards=cards)
 
 
-# User registration route
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    User registration route. Handles registration form submission and user creation.
+    
+    Returns:
+    HTML: Rendered registration page or redirects to get_cards on successful registration.
+    """
     if request.method == "POST":
         existing_user = mongo.db.users.find_one({"email": request.form.get("email").lower()})
 
@@ -86,9 +112,14 @@ def register():
     return render_template("register.html")
 
 
-# User login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    User login route. Handles login form submission and user authentication.
+    
+    Returns:
+    HTML: Rendered login page or redirects to get_cards on successful login.
+    """
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
@@ -111,9 +142,17 @@ def login():
     return render_template("login.html")
 
 
-# User profile route
 @app.route("/profile/<email>")
 def profile(email):
+    """
+    User profile route. Displays the user's profile information.
+    
+    Args:
+    email (str): The email of the user.
+    
+    Returns:
+    HTML: Rendered profile page or redirects to login if the user is not authenticated.
+    """
     if "user" in session and session["user"] == email:
         user = mongo.db.users.find_one({"email": email})
         if user:
@@ -125,18 +164,31 @@ def profile(email):
     return redirect(url_for("login"))
 
 
-# Inject logged-in user into templates
 @app.context_processor
 def inject_user():
+    """
+    Injects the logged-in user's information into all templates.
+    
+    Returns:
+    dict: A dictionary containing the logged-in user's information.
+    """
     if "user" in session:
         user = mongo.db.users.find_one({"email": session["user"]})
         return dict(logged_in_user=user)
     return dict(logged_in_user=None)
 
 
-# Route to update email page
 @app.route("/update_email_page/<email>")
 def update_email_page(email):
+    """
+    Route to display the email update page for the user.
+    
+    Args:
+    email (str): The email of the user.
+    
+    Returns:
+    HTML: Rendered profile-update page or redirects to login if the user is not authenticated.
+    """
     if "user" in session and session["user"] == email:
         user = mongo.db.users.find_one({"email": email})
         if user:
@@ -148,9 +200,17 @@ def update_email_page(email):
         return redirect(url_for("login"))
 
 
-# Update email logic
 @app.route("/update_email/<email>", methods=["POST"])
 def update_email(email):
+    """
+    Route to handle the email update logic for the user.
+    
+    Args:
+    email (str): The current email of the user.
+    
+    Returns:
+    JSON: Success or failure message.
+    """
     if "user" in session and session["user"] == email:
         new_email = request.form.get("new_email").lower()
         existing_user = mongo.db.users.find_one({"email": new_email})
@@ -171,32 +231,52 @@ def update_email(email):
         return redirect(url_for("login"))
 
 
-# User logout route
 @app.route("/logout")
 def logout():
+    """
+    User logout route. Clears the user session.
+    
+    Returns:
+    HTML: Redirects to the login page.
+    """
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
 
 
-# Loading page route
 @app.route("/loading")
 def loading():
+    """
+    Route to display the loading page.
+    
+    Returns:
+    HTML: Rendered loading page.
+    """
     return render_template("loading.html")
 
 
-# Form submission for tarot reading
 @app.route('/set_tarot_choice_and_question', methods=['POST'])
 def set_tarot_choice_and_question():
+    """
+    Sets the user's tarot choice and question in the session.
+    
+    Returns:
+    JSON: Success message.
+    """
     data = request.get_json()
     session['tarot_choice'] = data['tarot_choice']
     session['question'] = data['question']
     return jsonify({"success": True})
 
 
-# Process tarot reading request
 @app.route("/process_tarot_reading", methods=["POST"])
 def process_tarot_reading():
+    """
+    Processes the tarot reading request and generates a reading using OpenAI API.
+    
+    Returns:
+    JSON: The selected tarot cards and reading output or an error message.
+    """
     try:
         if "user" not in session:
             return jsonify({"success": False, "message": "User not logged in"})
@@ -261,9 +341,14 @@ def process_tarot_reading():
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# Route to display tarot reading
 @app.route("/reading")
 def reading():
+    """
+    Route to display the tarot reading results.
+    
+    Returns:
+    HTML: Rendered reading page with the tarot cards and reading output.
+    """
     cards = session.get("selected_cards", [])
     reading_output = session.get("reading_output", "")
 
@@ -274,9 +359,14 @@ def reading():
     return render_template("reading.html", cards=cards, reading_output=reading_output)
 
 
-# Save reading route
 @app.route("/save_reading", methods=["POST"])
 def save_reading():
+    """
+    Saves the tarot reading data to the database.
+    
+    Returns:
+    JSON: Success message and redirect URL or an error message.
+    """
     try:
         data = request.json
         reading_date = data.get("readingDate")
@@ -300,9 +390,14 @@ def save_reading():
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# Delete reading route
 @app.route("/delete_reading", methods=["POST"])
 def delete_reading():
+    """
+    Deletes a saved tarot reading from the database.
+    
+    Returns:
+    JSON: Success message or an error message.
+    """
     try:
         data = request.json
         reading_id = data.get("readingId")
@@ -314,9 +409,17 @@ def delete_reading():
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# Route to get saved readings
 @app.route("/saved_readings/<email>")
 def saved_readings(email):
+    """
+    Route to get and display the user's saved tarot readings.
+    
+    Args:
+    email (str): The email of the user.
+    
+    Returns:
+    HTML: Rendered saved_readings page or redirects to login if the user is not authenticated.
+    """
     if "user" in session and session["user"] == email:
         user = mongo.db.users.find_one({"email": email})
         if user:
@@ -331,9 +434,14 @@ def saved_readings(email):
     return redirect(url_for("login"))
 
 
-# Route to save journal entry
 @app.route("/save_journal", methods=["POST"])
 def save_journal():
+    """
+    Saves a journal entry related to a tarot reading.
+    
+    Returns:
+    JSON: Success message or an error message.
+    """
     try:
         data = request.json
         reading_id = data.get("readingId")
@@ -355,9 +463,14 @@ def save_journal():
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# Route to delete journal entry
 @app.route("/delete_journal", methods=["POST"])
 def delete_journal():
+    """
+    Deletes a journal entry related to a tarot reading.
+    
+    Returns:
+    JSON: Success message or an error message.
+    """
     try:
         data = request.json
         reading_id = data.get("readingId")
@@ -376,9 +489,14 @@ def delete_journal():
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# Delete account route
 @app.route("/delete_account", methods=["POST"])
 def delete_account():
+    """
+    Deletes the user's account and all associated data.
+    
+    Returns:
+    JSON: Success message and redirect URL or an error message.
+    """
     try:
         if "user" in session:
             user_email = session["user"]
@@ -397,19 +515,31 @@ def delete_account():
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# Convert ObjectId to string
 def convert_objectid_to_string(doc):
+    """
+    Convert MongoDB ObjectId to string.
+    
+    Args:
+    doc (dict): The document containing the ObjectId.
+    
+    Returns:
+    dict: The document with ObjectId converted to string.
+    """
     doc['_id'] = str(doc['_id'])
     return doc
 
 
-# Route to check session information (for debugging)
 @app.route('/session_info')
 def session_info():
+    """
+    Route to check session information for debugging.
+    
+    Returns:
+    JSON: The current session data.
+    """
     return jsonify(dict(session))
 
 
-# Run the app
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
