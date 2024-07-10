@@ -64,14 +64,35 @@ $(document).ready(function() {
         localStorage.setItem('tarot_choice', formData.get('tarot_choice'));
         localStorage.setItem('question', formData.get('question'));
 
-        // Redirect to loading page
-        window.location.href = '/loading';
+        // Set session data
+        fetch('/set_tarot_choice_and_question', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                tarot_choice: formData.get('tarot_choice'),
+                question: formData.get('question')
+            })
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  // Redirect to loading page
+                  window.location.href = '/loading';
+              } else {
+                  alert('Failed to set tarot choice and question.');
+              }
+          })
+          .catch((error) => {
+              console.error('Error:', error);
+              alert('An error occurred while setting tarot choice and question. Please try again.');
+          });
     });
 
     // Load tarot reading data
     if (window.location.pathname === '/reading') {
         const data = localStorage.getItem('tarotReadingData');
-
+    
         if (data) {
             const parsedData = JSON.parse(data);
             if (parsedData && parsedData.selected_cards) {
@@ -93,10 +114,10 @@ $(document).ready(function() {
                             </div>
                         </div>
                     `);
-                    cardContainer.find('.row').last().append(cardElement);
+                    cardContainer.find('.card-row').last().append(cardElement);
                 });
                 $('#reading-output').text(parsedData.reading_output);
-
+    
             } else {
                 console.error("Tarot reading data is missing or malformed:", parsedData);
                 alert('An error occurred while loading your tarot reading. Please try again.');
@@ -118,21 +139,20 @@ $(document).ready(function() {
                 tarot_choice: localStorage.getItem('tarot_choice'),
                 question: localStorage.getItem('question')
             })
-        }).then(response => {
-            return response.json();
-        }).then(data => {
-            if (data.success) {
-                localStorage.setItem('tarotReadingData', JSON.stringify(data));
-                window.location.href = '/reading';
-            } else {
-                alert('Please login or register.');
-                window.location.href = '/login';
-            }
-        }).catch((error) => {
-            console.error('Error:', error);
-            alert('An error occurred while processing your request. Please try again.');
-            window.location.href = '/';
-        });
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  localStorage.setItem('tarotReadingData', JSON.stringify(data));
+                  window.location.href = '/reading';
+              } else {
+                  alert(data.message || 'Please login or register.');
+                  window.location.href = '/login';
+              }
+          }).catch((error) => {
+              console.error('Error:', error);
+              alert('An error occurred while processing your request. Please try again.');
+              window.location.href = '/';
+          });
     }
 
     // Clear form logic

@@ -8,18 +8,23 @@ from flask_pymongo import PyMongo
 from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 if os.path.exists("env.py"):
     import env
 
+
 app = Flask(__name__)
+
 
 # Flask app configuration
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
+
 mongo = PyMongo(app)
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+
 
 # Password validation function
 def validate_password(password):
@@ -85,16 +90,20 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        existing_user = mongo.db.users.find_one({"email": request.form.get("email").lower()})
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
 
-        if existing_user:
-            if check_password_hash(existing_user["password"], request.form.get("password")):
-                session["user"] = existing_user["email"]
-                flash("Welcome, {}".format(existing_user["first_name"]))
-                return redirect(url_for("get_cards"))
-
-            flash("Incorrect email and/or password!")
+        if not email or not password:
+            flash("Please provide both email and password.")
             return redirect(url_for("login"))
+
+        existing_user = mongo.db.users.find_one({"email": email})
+
+        if existing_user and check_password_hash(existing_user["password"], password):
+            session["user"] = existing_user["email"]
+            session.permanent = True  # Make the session permanent
+            flash("Welcome, {}".format(existing_user["first_name"]))
+            return redirect(url_for("get_cards"))
 
         flash("Incorrect email and/or password!")
         return redirect(url_for("login"))
@@ -116,7 +125,7 @@ def profile(email):
     return redirect(url_for("login"))
 
 
-# Inject logged in user into templates
+# Inject logged-in user into templates
 @app.context_processor
 def inject_user():
     if "user" in session:
@@ -177,19 +186,12 @@ def loading():
 
 
 # Form submission for tarot reading
-@app.route("/submit_tarot_form", methods=["POST"])
-def submit_tarot_form():
-    try:
-        tarot_choice = request.form.get("tarot_choice")
-        question = request.form.get("question")
-        
-        session["tarot_choice"] = tarot_choice
-        session["question"] = question
-        
-        return redirect(url_for("loading"))
-    except Exception as e:
-        flash("An error occurred while processing your request. Please try again.")
-        return redirect(url_for("get_cards"))
+@app.route('/set_tarot_choice_and_question', methods=['POST'])
+def set_tarot_choice_and_question():
+    data = request.get_json()
+    session['tarot_choice'] = data['tarot_choice']
+    session['question'] = data['question']
+    return jsonify({"success": True})
 
 
 # Process tarot reading request
@@ -329,7 +331,6 @@ def saved_readings(email):
     return redirect(url_for("login"))
 
 
-
 # Route to save journal entry
 @app.route("/save_journal", methods=["POST"])
 def save_journal():
@@ -400,6 +401,12 @@ def delete_account():
 def convert_objectid_to_string(doc):
     doc['_id'] = str(doc['_id'])
     return doc
+
+
+# Route to check session information (for debugging)
+@app.route('/session_info')
+def session_info():
+    return jsonify(dict(session))
 
 
 # Run the app
