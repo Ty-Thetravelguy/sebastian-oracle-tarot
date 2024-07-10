@@ -31,7 +31,9 @@ $(document).ready(function() {
         }
     });
 
-    // Password match and requirements check logic
+    /**
+     * Validates the password fields and displays appropriate messages.
+     */
     function validatePassword() {
         const password = $('#password').val();
         const passwordRepeat = $('#password_repeat').val();
@@ -54,7 +56,10 @@ $(document).ready(function() {
 
     $('#password, #password_repeat').on('input', validatePassword);
 
-    // Form submission logic
+    /**
+     * Handles form submission for the tarot form.
+     * @param {Event} event - The form submission event.
+     */
     $('#tarot-form').on('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
         const form = event.target;
@@ -89,7 +94,9 @@ $(document).ready(function() {
           });
     });
 
-    // Load tarot reading data
+    /**
+     * Loads tarot reading data from local storage and displays it on the reading page.
+     */
     if (window.location.pathname === '/reading') {
         const data = localStorage.getItem('tarotReadingData');
     
@@ -128,7 +135,9 @@ $(document).ready(function() {
         }
     }
 
-    // Handle tarot reading processing on the loading page
+    /**
+     * Handles tarot reading processing on the loading page.
+     */
     if (window.location.pathname === '/loading') {
         fetch('/process_tarot_reading', {
             method: 'POST',
@@ -155,7 +164,9 @@ $(document).ready(function() {
           });
     }
 
-    // Clear form logic
+    /**
+     * Clears the tarot form fields and local storage items related to the form.
+     */
     $('#tarot-form').on('reset', function() {
         // Clear the form fields
         $(this).find('input[type=text], textarea').val('');
@@ -166,7 +177,9 @@ $(document).ready(function() {
         localStorage.removeItem('question');
     });
 
-    // Initialize collapsible for saved readings
+    /**
+     * Initializes collapsible components for saved readings page.
+     */
     if (window.location.pathname === '/saved_readings') {
         $('.collapsible').collapsible();
         $('.journal-btn').on('click', function() {
@@ -175,7 +188,9 @@ $(document).ready(function() {
         });
     }
 
-    // Save reading button click handler
+    /**
+     * Handles saving a tarot reading.
+     */
     $('#save-reading-btn').on('click', function() {
         const readingDate = new Date().toLocaleDateString();
         const questionAsked = localStorage.getItem('question');
@@ -207,14 +222,18 @@ $(document).ready(function() {
             });
     });
 
-    // Delete reading button click handler
+    /**
+     * Handles deleting a tarot reading.
+     */
     let readingToDelete = null;
     $(document).on('click', '.delete-reading-btn', function() {
         readingToDelete = $(this).data('reading-id');
         $('#delete-modal').modal('open');
     });
 
-    // Confirm delete reading
+    /**
+     * Confirms and deletes the selected tarot reading.
+     */
     $('#confirm-delete-btn').on('click', function() {
         const confirmationInput = $('#delete-confirmation').val();
         if (readingToDelete && confirmationInput === 'DELETE') {
@@ -243,7 +262,9 @@ $(document).ready(function() {
         }
     });
 
-    // Enable the confirm delete button only if the input is "DELETE"
+    /**
+     * Enables the confirm delete button only if the input is "DELETE".
+     */
     $('#delete-confirmation').on('input', function() {
         const confirmationInput = $(this).val();
         if (confirmationInput === 'DELETE') {
@@ -253,7 +274,9 @@ $(document).ready(function() {
         }
     });
 
-    // Save journal entry button click handler
+    /**
+     * Saves a journal entry related to a tarot reading.
+     */
     $(document).on('click', '.save-journal-btn', function() {
         const readingId = $(this).data('reading-id');
         const journalSubject = $(`#journal-subject-${readingId}`).val();
@@ -284,14 +307,18 @@ $(document).ready(function() {
         });
     });
 
-    // Delete journal entry button click handler
+    /**
+     * Handles deleting a journal entry.
+     */
     let journalToDelete = null;
     $(document).on('click', '.delete-journal-btn', function() {
         journalToDelete = $(this).data('reading-id');
         $('#delete-journal-modal').modal('open');
     });
 
-    // Confirm delete journal
+    /**
+     * Confirms and deletes the selected journal entry.
+     */
     $('#confirm-delete-journal-btn').on('click', function() {
         if (journalToDelete) {
             fetch('/delete_journal', {
@@ -317,12 +344,16 @@ $(document).ready(function() {
         }
     });
 
-    // Delete account button click handler
+    /**
+     * Handles account deletion process.
+     */
     $('.delete-account-btn').on('click', function() {
         $('#delete-account-modal').modal('open');
     });
 
-    // Enable the confirm delete account button only if the input is "DELETE"
+    /**
+     * Enables the confirm delete account button only if the input is "DELETE".
+     */
     $('#delete-account-confirmation').on('input', function() {
         const confirmationInput = $(this).val();
         if (confirmationInput === 'DELETE') {
@@ -332,7 +363,9 @@ $(document).ready(function() {
         }
     });
 
-    // Confirm delete account
+    /**
+     * Confirms and deletes the user's account.
+     */
     $('#confirm-delete-account-btn').on('click', function() {
         const confirmationInput = $('#delete-account-confirmation').val();
         if (confirmationInput === 'DELETE') {
