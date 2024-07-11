@@ -203,8 +203,8 @@ As you journey through your reading, the app allows you to save your insights an
    - Yes, all saved readings and journal entries associated with the deleted account are also deleted.
 
 ## Miscellaneous
-1. **Does the date picker and time picker work correctly on the registration and profile update forms?**
-   - Yes, the date picker and time picker work correctly on the registration and profile update forms.
+1. **Does the date picker and time picker work correctly on the registration forms?**
+   - Yes, the date picker and time picker work correctly.
 2. **Are form fields cleared when the form is reset?**
    - Yes, form fields are cleared when the form is reset.
 3. **Are validation messages correctly displayed and styled?**
