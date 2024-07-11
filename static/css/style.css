@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 /****************************General**************************/
 
@@ -24,6 +24,12 @@ h1{
 .underline {
     text-decoration: underline;
 }
+
+
+.roboto-text {
+    font-family: Roboto;
+}
+
 
 /**************************** Home **************************/
 
@@ -128,17 +134,25 @@ h1{
     color: #fafafa;
 }
 
+
 #password_message,
 #password_match_message {
     color: #fafafa;
+}
+
+/****************************Loading page**************************/
+
+#loading img {
+    width: 100%; 
+    max-width: 500px; 
 }
 
 
 /****************************Reading page**************************/
 
 .card {
-    width: 189.328px;
-    height: 424.453px;
+    width: 190px;
+    height: 425px;
 }
 
 
@@ -158,6 +172,7 @@ h1{
 
 /****************************Media Queries**************************/
 
+
 @media (max-width:1440px) {
     h1 {
         margin-top: 0px;
@@ -167,7 +182,89 @@ h1{
 @media (max-width:1024px){
     h1 {
         font-size: 25px;
-    }
-    
+    } 
 }
 
+
+@media (max-width: 600px) {
+
+    h1 {
+        font-size: 20px;
+    } 
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h5 {
+        font-size: 15px;
+    }
+
+    p {
+        font-size: 10px;
+    }
+
+    .card {
+        width: 150px;
+        height: 350px;
+    }
+
+    .email-container {
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+
+    .input-field label {
+        font-size: 12px; 
+    }
+
+    #loading img {
+        max-width: 150px; 
+    }
+
+    .collapsible-header, .collapsible-body {
+        font-size: 12px; 
+        padding: 8px; 
+    }
+
+    .collapsible-header i.material-icons {
+        font-size: 1rem; 
+    }
+
+    .input-field label, .input-field input, .input-field textarea {
+        font-size: 12px !important; 
+        white-space: normal; 
+        word-wrap: break-word; 
+    }
+
+    .input-field input, .input-field textarea {
+        height: auto; 
+        padding: 4px; 
+        width: 100%; 
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 3px 8px; 
+        margin-top: 3px;
+        height: auto;
+    }
+   
+}
+
+
+@media (max-width: 400px) {
+    .card {
+        width: 80px;
+        height: 230px;
+        font-size: 8px;
+    }
+
+    p {
+        8px
+    }
+
+    #loading img {
+        max-width: 100px; /* Adjust the max-width for very small screens */
+    }
+}

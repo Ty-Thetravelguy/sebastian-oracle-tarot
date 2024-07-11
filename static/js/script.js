@@ -110,7 +110,7 @@ $(document).ready(function() {
                         cardContainer.append('<div class="row card-row"></div>');
                     }
                     const cardElement = $(`
-                        <div class="col s12 m4">
+                        <div class="col s4">
                             <div class="card">
                                 <div class="card-image">
                                     <img src="${card.cardImg}" alt="${card.cardName}" class="responsive-img">
