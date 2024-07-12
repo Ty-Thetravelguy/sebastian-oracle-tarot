@@ -2,6 +2,8 @@
 
 ## HTML, CSS, JavaScript, Python+Flask and MongoDB - Back End Development
 
+![mockup](static/readme_imgs/mockup.png)
+
 Enter a realm of mysticism and wonder with Sebastian Oracle's tarot reading app. With over a decade of experience, Sebastian Oracle now unveils his craft to the World Wide Web, offering you profound insights into your life's journey. The app features three distinctive spreads, each tailored to your specific enquiries:
 
 General Life Enquiry (Three-Card Spread):
@@ -175,6 +177,31 @@ While researching, I discovered a webpage with an intriguing feature: the colour
 | journal_subject  | String    |
 | journal_text     | String    |
 
+## Screenshots
+
+### Login page
+![Login page](static/readme_imgs/login-page.png)
+
+### Register page
+![Register page](static/readme_imgs/register-page.png)
+
+### Profile page
+![Profile page](static/readme_imgs/profile-page.png)
+
+### Home page
+![home page](static/readme_imgs/home.png)
+
+### Loading page
+![loading page](static/readme_imgs/loading-page.png)
+
+### Reading page
+![reading page](static/readme_imgs/reading-page.png)
+
+### Saved readings page 1
+![saved readings page 1](static/readme_imgs/Saved-readings-1.png)
+
+### Saved readings page 2
+![saved readings page 2](static/readme_imgs/Saved-readings-2.png)
 
 # Testing 
 ## Manaul Testing
