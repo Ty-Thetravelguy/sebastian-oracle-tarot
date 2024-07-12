@@ -294,13 +294,4 @@ h1{
         text-align: center;
         margin: 0 auto;
     }
-   
-}
-
-
-@media (max-width: 400px) {
-
-    #loading img {
-        max-width: 100px;
-    }
 }
