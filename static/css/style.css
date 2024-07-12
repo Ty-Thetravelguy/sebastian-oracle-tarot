@@ -38,6 +38,10 @@ h1{
     height: auto;
 }
 
+.hide-on-small-only, .hide-on-med-and-up {
+    display: none !important;
+}
+
 .index-page .select-wrapper input.select-dropdown,
 .index-page .light-color-text {
     color: #fafafa;
@@ -293,5 +297,14 @@ h1{
     #reading-output {
         text-align: center;
         margin: 0 auto;
+    }
+    .show-on-small {
+        display: block !important;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .show-on-medium-and-up {
+        display: block !important;
     }
 }
