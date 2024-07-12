@@ -106,9 +106,80 @@ As you journey through your reading, the app allows you to save your insights an
 -   Offer various reading options and spreads to cater to different questions and concerns users might have.
 -   Allow users to choose the depth and detail of their readings, from quick insights to comprehensive analyses.
 
-# Manual Testing Checklist
+# Design
 
-## User Registration
+## Design Process for Sebastian Oracle
+
+Sebastian Oracle was born out of my newfound passion for tarot cards. As someone who is new to tarot reading and doesn’t remember the meaning of every card, I started using ChatGPT to expedite my readings. This led to the idea of creating an app that automates this process, making tarot readings more accessible and efficient.
+
+### Concept and Inspiration
+
+The inspiration for Sebastian Oracle came from my personal journey with tarot cards. The name "Sebastian Oracle" reflects a mystical and ancient feel, aligning with the essence of tarot readings. 
+
+### Colour Scheme and Aesthetic
+
+To evoke a sense of mystery and magic, I chose a colour palette of darker reds and purples. These colours not only create a mystical ambiance but also make the app visually appealing and engaging for users. 
+
+### Interactive Design Elements
+
+While researching, I discovered a webpage with an intriguing feature: the colours changed and followed the mouse movement. Inspired by this, I inspected the page’s JavaScript code and experimented to incorporate a similar interactive element in my app. This feature enhances user engagement by providing a dynamic and immersive experience.
+
+### Visual Assets
+
+1. **Wizard Image**: The image of an old wizard-like man was generated using AI, adding a unique and mystical character to the app.
+2. **Tarot Card Images**: All the tarot card images are original, as I scanned and saved each card individually for this project. This ensures the authenticity and uniqueness of the visual content in the app.
+
+### Features and Functionality
+
+1. **Automated Card Meanings**: Leveraging AI, the app provides instant interpretations of drawn tarot cards, helping users understand their readings without needing to reference external materials.
+2. **User Interaction**: The interactive colour-changing background follows the user’s mouse movements, creating a visually stimulating environment.
+3. **Personalized Readings**: Users can save their readings, including the date, questions asked, and detailed journal entries. This feature allows users to track their spiritual journey and reflect on past readings.
+
+## Wire Frame
+
+![Wireframe](static/readme_imgs/Wireframe.png)
+
+## Site Map
+
+![Site Map](static/readme_imgs/Site%20Map.jpg)
+
+## Data Structure
+
+### Users
+| Field            | Type      |
+|------------------|-----------|
+| _id              | Object ID |
+| first_name       | String    |
+| last_name        | String    |
+| email            | String    |
+| date_of_birth    | Date      |
+| time_of_birth    | String    |
+| place_of_birth   | String    |
+| password         | String    |
+
+### tarotCards
+| Field            | Type      |
+|------------------|-----------|
+| _id              | Object ID |
+| cardName         | String    |
+| cardImg          | String    |
+
+### savedReadings
+| Field            | Type      |
+|------------------|-----------|
+| _id              | Object ID |
+| readingDate      | String    |
+| questionAsked    | String    |
+| readingData      | String    |
+| journal_date     | Date      |
+| journal_subject  | String    |
+| journal_text     | String    |
+
+
+# Testing 
+## Manaul Testing
+
+### User Registration
 1. **Can a user register with valid information?**
    - Yes, the user can register successfully with valid information.
 2. **What happens if a user tries to register with an email that already exists?**
@@ -122,7 +193,7 @@ As you journey through your reading, the app allows you to save your insights an
 6. **Is the user redirected to the home page after successful registration?**
    - Yes, the user is redirected to the home page after successful registration.
 
-## User Login
+### User Login
 1. **Can a user login with valid credentials?**
    - Yes, the user can login with valid credentials.
 2. **What happens if a user tries to login with an incorrect email?**
@@ -136,7 +207,7 @@ As you journey through your reading, the app allows you to save your insights an
 6. **Is the user redirected to the home page after successful login?**
    - Yes, the user is redirected to the home page after successful login.
 
-## User Profile
+### User Profile
 1. **Can a logged-in user view their profile?**
    - Yes, a logged-in user can view their profile.
 2. **Is the profile information displayed correctly?**
@@ -148,7 +219,7 @@ As you journey through your reading, the app allows you to save your insights an
 5. **What happens if a user tries to update their email to an already existing one?**
    - The system displays an error message indicating that the email is already in use.
 
-## Tarot Reading Process
+### Tarot Reading Process
 1. **Can a user select a tarot choice and ask a question?**
    - Yes, a user can select a tarot choice and ask a question.
 2. **Is the tarot_choice and question correctly set in the session?**
@@ -160,7 +231,7 @@ As you journey through your reading, the app allows you to save your insights an
 5. **What happens if there is no tarot_choice or question set in the session?**
    - The system displays an error message or prompts the user to select a tarot choice and ask a question.
 
-## Saved Readings
+### Saved Readings
 1. **Can a logged-in user view their saved readings?**
    - Yes, a logged-in user can view their saved readings.
 2. **Is the saved readings list displayed correctly with all details?**
@@ -176,7 +247,7 @@ As you journey through your reading, the app allows you to save your insights an
 7. **Is there a success message displayed upon successful deletion?**
    - Yes, a success message is displayed upon successful deletion.
 
-## Journal Entries
+### Journal Entries
 1. **Can a user add a journal entry to a saved reading?**
    - Yes, a user can add a journal entry to a saved reading.
 2. **Is there a success message displayed upon saving a journal entry?**
@@ -190,7 +261,7 @@ As you journey through your reading, the app allows you to save your insights an
 6. **Is there a success message displayed upon successful deletion of a journal entry?**
    - Yes, a success message is displayed upon successful deletion of a journal entry.
 
-## Account Management
+### Account Management
 1. **Can a user delete their account?**
    - Yes, a user can delete their account.
 2. **Is there a confirmation prompt before deleting the account?**
@@ -202,7 +273,7 @@ As you journey through your reading, the app allows you to save your insights an
 5. **Are all saved readings and journal entries associated with the deleted account also deleted?**
    - Yes, all saved readings and journal entries associated with the deleted account are also deleted.
 
-## Miscellaneous
+### Miscellaneous
 1. **Does the date picker and time picker work correctly on the registration forms?**
    - Yes, the date picker and time picker work correctly.
 2. **Are form fields cleared when the form is reset?**
