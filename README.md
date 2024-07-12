@@ -311,3 +311,52 @@ While researching, I discovered a webpage with an intriguing feature: the colour
    - Yes, all user inputs are sanitized to prevent XSS attacks.
 5. **Are all buttons and links functioning and redirecting correctly?**
    - Yes, all buttons and links are functioning and redirecting correctly.
+
+## Light house and Validation teseting.
+
+### Lighthouse
+
+There are few lighthouse tests with a sore between 80 and 87. I thought the lower 80 for Mobile reading-page.html was due to larger imgages taking a while to load, but after resizing them, i'm still getting the same score. 
+
+#### Mobile - login.html
+![Mobile - login.html](static/readme_imgs/Mobile%20-%20login.html.png)
+
+#### Mobile - register.html
+![Mobile - register.html](static/readme_imgs/Mobile%20-%20register.html.png)
+
+#### Mobile - index.html
+![Mobile - index.html](static/readme_imgs/Mobile%20-%20index.html.png)
+
+#### Mobile - reading.html
+![Mobile - reading.html](static/readme_imgs/Mobile%20-%20reading.html.png)
+
+#### Mobile - saved_reading.html
+![Mobile - saved_readings.html](static/readme_imgs/Mobile%20-%20saved_readings.html.png)
+
+#### Mobile - profile.html
+![Mobile - profile.html](static/readme_imgs/Mobile%20-%20profile.html.png)
+
+#### Desktop - login.html
+![Desktop - login.html](static/readme_imgs/Desktop%20-%20login.html.png)
+
+#### Desktop - register.html
+![Desktop - register.html](static/readme_imgs/Desktop%20-%20register.html.png)
+
+#### Desktop - index.html
+![Desktop - index.html](static/readme_imgs/Desktop%20-%20index.html.png)
+
+#### Desktop - reading.html
+![Desktop - reading.html](static/readme_imgs/Desktop%20-%20reading.html.png)
+
+#### Desktop - saved_reading.html
+![Desktop - saved_readings.html](static/readme_imgs/Desktop%20-%20saved_readings.html.png)
+
+#### Desktop - profile.html
+![Desktop - profile.html](static/readme_imgs/Desktop%20-%20profile.html.png)
+
+### Validation. 
+
+I ran the website through [W3C Markup Validation Service](https://validator.w3.org/). No errors were found.
+
+I ran the website through [W3C CSS Validation Service](https://jigsaw.w3.org/css-validator/). There was one error warning from Materialize. Otherwise, none of my own errors.
+
