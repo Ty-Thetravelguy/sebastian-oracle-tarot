@@ -25,11 +25,26 @@ Each reading is enriched with personalised insights drawn from the user's name, 
 
 As you journey through your reading, the app allows you to save your insights and journal your reflections. This feature helps you express your thoughts and feelings, fostering a deeper understanding and personal growth. Embrace the mystery, and let Sebastian Oracle guide you through the whispers of the tarot.
 
-## Table of contents
+Click [Here](https://sebastian-oracle-tarot-reading-e9e1a8a6aefc.herokuapp.com/) to find out what the cards hold for you.
+
+## Table of Contents
 
 1. [Business Needs](#business-needs)
-
 2. [User Wants](#user-wants)
+3. [Design](#design)
+   - [Design Process for Sebastian Oracle](#design-process-for-sebastian-oracle)
+   - [Wireframe](#wireframe)
+   - [Site Map](#site-map)
+   - [Data Structure](#data-structure)
+7. [Technology Used](#technology-used)
+8. [Screenshots](#screenshots)
+9. [Testing](#testing)
+   - [Manual Testing](#manual-testing)
+   - [Lighthouse and Validation Testing](#lighthouse-and-validation-testing)
+10. [Bugs and Issues](#bugs-and-issues)
+11. [Deployment to Heroku](#deployment-to-heroku)
+12. [Credits](#credits)
+
 
 ## Business Needs
 
@@ -108,46 +123,46 @@ As you journey through your reading, the app allows you to save your insights an
 -   Offer various reading options and spreads to cater to different questions and concerns users might have.
 -   Allow users to choose the depth and detail of their readings, from quick insights to comprehensive analyses.
 
-# Design
+## Design
 
-## Design Process for Sebastian Oracle
+### Design Process for Sebastian Oracle
 
 Sebastian Oracle was born out of my newfound passion for tarot cards. As someone who is new to tarot reading and doesn’t remember the meaning of every card, I started using ChatGPT to expedite my readings. This led to the idea of creating an app that automates this process, making tarot readings more accessible and efficient.
 
-### Concept and Inspiration
+#### Concept and Inspiration
 
 The inspiration for Sebastian Oracle came from my personal journey with tarot cards. The name "Sebastian Oracle" reflects a mystical and ancient feel, aligning with the essence of tarot readings. 
 
-### Colour Scheme and Aesthetic
+#### Colour Scheme and Aesthetic
 
 To evoke a sense of mystery and magic, I chose a colour palette of darker reds and purples. These colours not only create a mystical ambiance but also make the app visually appealing and engaging for users. 
 
-### Interactive Design Elements
+#### Interactive Design Elements
 
 While researching, I discovered a webpage with an intriguing feature: the colours changed and followed the mouse movement. Inspired by this, I inspected the page’s JavaScript code and experimented to incorporate a similar interactive element in my app. This feature enhances user engagement by providing a dynamic and immersive experience.
 
-### Visual Assets
+#### Visual Assets
 
 1. **Wizard Image**: The image of an old wizard-like man was generated using AI, adding a unique and mystical character to the app.
 2. **Tarot Card Images**: All the tarot card images are original, as I scanned and saved each card individually for this project. This ensures the authenticity and uniqueness of the visual content in the app.
 
-### Features and Functionality
+#### Features and Functionality
 
 1. **Automated Card Meanings**: Leveraging AI, the app provides instant interpretations of drawn tarot cards, helping users understand their readings without needing to reference external materials.
 2. **User Interaction**: The interactive colour-changing background follows the user’s mouse movements, creating a visually stimulating environment.
 3. **Personalized Readings**: Users can save their readings, including the date, questions asked, and detailed journal entries. This feature allows users to track their spiritual journey and reflect on past readings.
 
-## Wire Frame
+### Wire Frame
 
 ![Wireframe](static/readme_imgs/Wireframe.png)
 
-## Site Map
+### Site Map
 
 ![Site Map](static/readme_imgs/Site%20Map.jpg)
 
-## Data Structure
+### Data Structure
 
-### Users
+#### Users
 | Field            | Type      |
 |------------------|-----------|
 | _id              | Object ID |
@@ -159,14 +174,14 @@ While researching, I discovered a webpage with an intriguing feature: the colour
 | place_of_birth   | String    |
 | password         | String    |
 
-### tarotCards
+#### tarotCards
 | Field            | Type      |
 |------------------|-----------|
 | _id              | Object ID |
 | cardName         | String    |
 | cardImg          | String    |
 
-### savedReadings
+#### savedReadings
 | Field            | Type      |
 |------------------|-----------|
 | _id              | Object ID |
@@ -449,3 +464,9 @@ This bug was a tough one to sort out, but with ChatGPT's help, I figured it out.
 8. On `Config Vars` section, click `Reveal Config Vars`
 9. Based on `env.py` file, add all the environment variables to the `Config Vars` section.
 10. On top right coner of the app's dashboard, locate the button `Open app`. You will be able to see you deployed app with link to live site.
+
+## Credits
+* My mentor Spencer Barriball. Spencer has been great in reminding to make notes throughout my code and put my mind at ease that my project was a good idea.
+* Task Manager mini project
+* ChatGPT for the guides with integrating its API and debugging.
+* Lastly, I want to express my gratitude to Ben Smith. Thank you for the extension again. Its been a tough year but I really feel and believe that things changing for the good. 
