@@ -177,6 +177,29 @@ While researching, I discovered a webpage with an intriguing feature: the colour
 | journal_subject  | String    |
 | journal_text     | String    |
 
+## Technology used
+
+### Languages
+* [HTML5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5) - build up layout and content of the application.
+* [CSS3](https://developer.mozilla.org/en-US/docs/Web/CSS) - add custom styling and override Materialize stylings to fit with the theme of the app.
+* [JavaScript](https://www.javascript.com/) - to add interactive functionailities to the app
+* [Python](https://www.python.org/) - to build backend functionalities handling data, database interaction, and CRUD functionalities.
+
+### Programs and Tools
+* [MongoDB](https://www.mongodb.com/) - The database being used to store my tarot cards urls, users and readings
+* [Amazon S3](shorturl.at/CULwv) - Cloud Object Storage - To store my tarot card images.
+* [Image Resizer.com](https://imageresizer.com/) - To bulk resize my tarot card images.
+* [ChatGPT](https://chatgpt.com/) - Generate an image of a tarot reader. 
+
+### Frameworks and Libraries
+* [Materialize](https://materializecss.com/) - A responsive front-end framework based on Material Design
+* [Flask](https://flask.palletsprojects.com/en/3.0.x/) - a micro web framework for Python.
+* [Flask-PyMongo](https://flask-pymongo.readthedocs.io/en/latest/) - a Flask extension for using MongoDB.
+* [Werkzeug](https://werkzeug.palletsprojects.com/en/3.0.x/) - a comprehensive WSGI web application library used with Flask.
+* [OpenAI](https://openai.com/) - for integrating OpenAI's API, using Chat GPT to guide me through some of the code and debut.
+* [bson](https://bsonspec.org/#:~:text=BSON%20%2C%20short%20for%20Binary%20JSON,part%20of%20the%20JSON%20spec.) library for handling BSON data (related to MongoDB).
+* [Python's](https://www.python.org/) standard libraries such as os, re, random, and datetime.
+
 ## Screenshots
 
 ### Login page
@@ -354,9 +377,75 @@ There are few lighthouse tests with a sore between 80 and 87. I thought the lowe
 #### Desktop - profile.html
 ![Desktop - profile.html](static/readme_imgs/Desktop%20-%20profile.html.png)
 
-### Validation. 
+### Validation
 
 I ran the website through [W3C Markup Validation Service](https://validator.w3.org/). No errors were found.
 
-I ran the website through [W3C CSS Validation Service](https://jigsaw.w3.org/css-validator/). There was one error warning from Materialize. Otherwise, none of my own errors.
+I ran the website through [W3C CSS Validation Service](https://jigsaw.w3.org/css-validator/). There was one warning from Materialize, but no errors from my own code.
 
+I ran my Python code through [CI Python Linter](https://pep8ci.herokuapp.com/#). Initially, I had many lines that were too long. Some I managed to fix myself, but for others, I sought help from ChatGPT, as my line breaks were causing issues.
+
+### Miscellaneous
+
+I conducted extensive cross-browser testing, meticulously reviewing the website in various browsers. During this process, I systematically clicked on every button on each page to verify their functionality and ensure a consistent, error-free user experience across different platforms:
+
+1. Google Chrome
+2. Microsoft Edge
+3. Opera
+4. Mozilla Firefox
+5. DuckDuckGo
+
+I noticed a few styling issues on smaller screen resolutions, which I corrected. These were minor and primarily for visual appearance.
+
+## Bugs and Issues
+
+During this project, I felt I understood Python better than JavaScript. I encountered fewer bugs and issues because I followed the Non-Relational Database mini-project and adapted it to my needs. ChatGPT guided me on integrating its API into my project, which was very helpful.
+
+### Connecting to MongoDB
+
+I initially struggled to connect to MongoDB because I was using the wrong database name, mistakenly using the project name instead.
+
+### Rendering Images
+
+My images were not rendering because I hadn't configured the correct settings for Amazon S3. I lacked a Bucket Policy. With ChatGPT's help, I learned that I needed a policy and to ensure everything was made public. After doing this, everything worked.
+
+### ChatGPT Version
+
+When I installed ChatGPT, I got the latest version, but the code provided was for an older version. I noticed the error in the terminal and corrected it easily.
+
+### Logged Out Message While Being Logged In
+
+This bug was a tough one to sort out, but with ChatGPT's help, I figured it out. Here’s an overview:
+
+#### Bug Overview
+
+**Description:** The application was failing to process tarot readings correctly, consistently returning an "Invalid choice" error. This occurred because the server-side session was not correctly storing the `tarot_choice` and `question` values, leading to an inability to process the tarot reading request.
+
+**Impact:** Users were unable to complete the tarot reading process, as the application could not recognize valid tarot choices and questions.
+
+#### Cause of the Bug
+
+**Root Cause:** The root cause was that the `tarot_choice` and `question` values were not being properly set and retrieved from the server-side session. The following specific issues were identified:
+
+1. **Session Values Not Set Correctly:** The client-side code was storing the `tarot_choice` and `question` values in local storage but not properly updating the server-side session.
+2. **Session Persistence Issues:** The session values were either missing or not being correctly maintained across different routes and requests.
+
+#### Steps Taken to Address and Fix the Bug
+
+1. **Add a Route to Set Session Data:** Created a new route to accept `tarot_choice` and `question` values from the client-side and set these values in the server-side session.
+2. **Update Client-Side Code to Use the New Route:** Modified the client-side code to send the `tarot_choice` and `question` values to the new route before redirecting to the loading page.
+3. **Verify Session Values in the Tarot Reading Processing Route:** Ensured that the route for processing tarot reading correctly retrieved the `tarot_choice` and `question` values from the session and handled the tarot reading logic accordingly.
+
+**Summary:** The bug was caused by the server-side session not correctly storing and maintaining the `tarot_choice` and `question` values, leading to an inability to process tarot reading requests.
+
+## Deployment to Heroku
+1. Log in to [Heroku](https://www.heroku.com/)
+2. On top right corner of the screen, locate the `New` button and the choose `Create new app`.
+3. Give a unique name to the app, choose appropriate region, and click `Create`.
+4. Access your app dashboard and click on `Deploy`.
+5. Under `Deployment method`, choose GitHub and coonect to the respective repository.
+6. Enable automatic deployment and click `Deploy`.
+7. Set up environment on Heroku by going to `Settings` tab.
+8. On `Config Vars` section, click `Reveal Config Vars`
+9. Based on `env.py` file, add all the environment variables to the `Config Vars` section.
+10. On top right coner of the app's dashboard, locate the button `Open app`. You will be able to see you deployed app with link to live site.
