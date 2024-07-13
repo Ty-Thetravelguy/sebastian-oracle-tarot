@@ -6,7 +6,7 @@ import datetime
 from bson import ObjectId
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, \
 session, request, jsonify
 
 

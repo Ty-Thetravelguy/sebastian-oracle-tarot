@@ -15,6 +15,10 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
   <script src="{{ url_for('static', filename='js/background.js') }}"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon_imgs/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon_imgs/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon_imgs/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='favicon_imgs/site.webmanifest') }}">
   {% block styles %}
   {% endblock %}
   <title>Sebastian Oracle Tarot</title>
