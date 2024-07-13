@@ -26,6 +26,11 @@ mongo = PyMongo(app)
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
 def validate_password(password):
     """
     Validate a password to ensure it meets security requirements.
