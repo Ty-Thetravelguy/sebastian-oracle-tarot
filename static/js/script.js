@@ -9,9 +9,15 @@ $(document).ready(function() {
     }).attr('readonly', 'readonly'); // Make the datepicker field readonly
 
     // Time picker initialization
-    $('.timepicker').timepicker({
-        twelveHour: true // Use 12-hour format
-    }).attr('readonly', 'readonly'); // Make the timepicker field readonly
+    $('#time_of_birth').timepicker({
+        twelveHour: true,
+        autoClose: false // We're handling the close manually
+    }).attr('readonly', 'readonly');
+
+    $('#new_time_of_birth').timepicker({
+        twelveHour: true,
+        autoClose: false // We're handling the close manually
+    }).attr('readonly', 'readonly');
 
     // Open date picker on focus
     $('#date_of_birth').on('focus', function() {
@@ -25,11 +31,42 @@ $(document).ready(function() {
 
     // Manually handle closing of the time picker
     $(document).on('click', '.timepicker-close, .btn-flat', function() {
-        const timePickerInstance = M.Timepicker.getInstance($('#time_of_birth'));
-        if (timePickerInstance) {
-            timePickerInstance.close();
+        const timeOfBirthElement = $('#time_of_birth');
+        const newTimeOfBirthElement = $('#new_time_of_birth');
+    
+        console.log('Time of Birth Element:', timeOfBirthElement.length);
+        console.log('New Time of Birth Element:', newTimeOfBirthElement.length);
+    
+        const timeOfBirthInstance = timeOfBirthElement.length ? M.Timepicker.getInstance(timeOfBirthElement) : null;
+        const newTimeOfBirthInstance = newTimeOfBirthElement.length ? M.Timepicker.getInstance(newTimeOfBirthElement) : null;
+    
+        if (timeOfBirthInstance) {
+            console.log('Closing time_of_birth picker');
+            timeOfBirthInstance.close();
+        } else {
+            console.log('time_of_birth picker not initialized');
+        }
+    
+        if (newTimeOfBirthInstance) {
+            console.log('Closing new_time_of_birth picker');
+            newTimeOfBirthInstance.close();
+        } else {
+            console.log('new_time_of_birth picker not initialized');
         }
     });
+
+    // Handlying update profile page
+    if ($('#new_time_of_birth').length) {
+        $('#new_time_of_birth').timepicker({
+            twelveHour: true,
+            defaultTime: $('#new_time_of_birth').val() || 'now'
+        });
+
+        // Open time picker on focus
+        $('#new_time_of_birth').on('focus', function() {
+            $(this).timepicker('open');
+        });
+    }
 
     /**
      * Validates the password fields and displays appropriate messages.
@@ -41,20 +78,47 @@ $(document).ready(function() {
         const matchMessage = $('#password_match_message');
         const requirementsPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]).{6,20}$/;
 
+        let isValid = true;
+
         if (!requirementsPattern.test(password)) {
             passwordMessage.text('Password must be between 6 and 20 characters long, contain at least one uppercase letter, one number, and one special character. (!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?)').css('color', '#fafafa');
+            isValid = false;
         } else {
             passwordMessage.text('');
         }
 
         if (password !== passwordRepeat) {
             matchMessage.text('Passwords do not match').css('color', '#fafafa');
-        } else {
+            isValid = false;
+        } else if (password && passwordRepeat) {
             matchMessage.text('Passwords match').css('color', '#fafafa');
+        } else {
+            matchMessage.text('');
         }
+
+        return isValid;
     }
 
-    $('#password, #password_repeat').on('input', validatePassword);
+    function updateRegisterButtonState() {
+        const isValid = validatePassword();
+        $('#register-button').prop('disabled', !isValid);
+    }
+
+    $('#password, #password_repeat').on('input', function() {
+        validatePassword();
+        updateRegisterButtonState();
+    });
+
+    // Initial button state
+    updateRegisterButtonState();
+
+    // Form submission validation
+    $('#registration-form').on('submit', function(event) {
+        if (!validatePassword()) {
+            event.preventDefault();
+            alert('Please ensure your passwords match and meet the requirements.');
+        }
+    });
 
     /**
      * Handles form submission for the tarot form.

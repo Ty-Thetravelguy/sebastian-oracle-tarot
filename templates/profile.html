@@ -27,9 +27,10 @@
                 <div class="col s6">
                     <p class="left-align grey-text text-lighten-5 email-container">
                         {{ user.email }}
-                        <a href="{{ url_for('update_email_page', email=user.email) }}">
+                        <!-- Remove or comment out this line if you no longer want the edit icon -->
+                        <!-- <a href="{{ url_for('update_profile_page', email=user.email) }}">
                             <i class="material-icons tooltipped" data-position="right" data-tooltip="Update Email Address">edit</i>
-                        </a>
+                        </a> -->
                     </p>
                 </div>
             </div>
@@ -59,6 +60,7 @@
             </div>
             <div class="row">
                 <div class="col s12 center-align">
+                    <a href="{{ url_for('update_profile_page', email=user.email) }}" class="btn waves-effect waves-light teal">Update Profile</a>
                     <button class="btn waves-effect waves-light red delete-account-btn">Delete Account</button>
                 </div>
             </div>

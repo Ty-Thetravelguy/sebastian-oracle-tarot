@@ -199,16 +199,16 @@ def inject_user():
     return dict(logged_in_user=None)
 
 
-@app.route("/update_email_page/<email>")
-def update_email_page(email):
+@app.route("/profile-update/<email>")
+def update_profile_page(email):
     """
-    Route to display the email update page for the user.
+    Route to display the update profile page for the user.
 
     Args:
     email (str): The email of the user.
 
     Returns:
-    HTML: Rendered profile-update page or redirects
+    HTML: Rendered update-profile page or redirects
     to login if the user is not authenticated.
     """
     if "user" in session and session["user"] == email:
@@ -217,39 +217,50 @@ def update_email_page(email):
             return render_template("profile-update.html", user=user)
         flash("User not found.")
         return redirect(url_for("login"))
-    else:
-        flash("You need to log in to update your email.")
-        return redirect(url_for("login"))
+    flash("You need to be logged in to update your profile.")
+    return redirect(url_for("login"))
 
 
-@app.route("/update_email/<email>", methods=["POST"])
-def update_email(email):
+@app.route("/update-profile/<email>", methods=["POST"])
+def update_profile(email):
     """
-    Route to handle the email update logic for the user.
+    Route to handle the profile update logic for the user.
 
     Args:
     email (str): The current email of the user.
 
     Returns:
-    JSON: Success or failure message.
+    Redirect: Redirects to the profile page on successful update,
+    or back to the update page if there's an error.
     """
     if "user" in session and session["user"] == email:
         new_email = request.form.get("new_email").lower()
-        existing_user = mongo.db.users.find_one({"email": new_email})
-        if existing_user:
-            flash("Email already in use. Please choose a different one.")
-            return redirect(url_for("update_email_page", email=email))
+        new_time_of_birth = request.form.get("new_time_of_birth")
 
+        # Check if the new email already exists (if it's different from the current one)
+        if new_email != email:
+            existing_user = mongo.db.users.find_one({"email": new_email})
+            if existing_user:
+                flash("Email already in use. Please choose a different one.")
+                return redirect(url_for("profile-update", email=email))
+
+        # Update the user's profile
         mongo.db.users.update_one(
             {"email": email},
-            {"$set": {"email": new_email}}
+            {"$set": {
+                "email": new_email,
+                "time_of_birth": new_time_of_birth
+            }}
         )
 
-        session["user"] = new_email
-        flash("Email updated successfully!")
+        # Update session if email changed
+        if new_email != email:
+            session["user"] = new_email
+
+        flash("Profile updated successfully!")
         return redirect(url_for("profile", email=new_email))
     else:
-        flash("You need to log in to update your email.")
+        flash("You need to be logged in to update your profile.")
         return redirect(url_for("login"))
 
 
@@ -603,4 +614,4 @@ def session_info():
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=False)
+            debug=True)

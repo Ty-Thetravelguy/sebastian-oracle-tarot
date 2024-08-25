@@ -1,59 +1,66 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container profile-page">
-    <h1 class="center-align grey-text text-lighten-5">Profile Page</h1>
+    <h1 class="center-align grey-text text-lighten-5">Update Profile</h1>
     <div class="row">
-        <div class="col s12 m6 offset-m3">
-            <div class="row">
-                <div class="col s6">
-                    <p class="right-align grey-text text-lighten-5">First Name:</p>
-                </div>
-                <div class="col s6">
-                    <p class="left-align grey-text text-lighten-5">{{ user.first_name }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <p class="right-align grey-text text-lighten-5">Last Name:</p>
-                </div>
-                <div class="col s6">
-                    <p class="left-align grey-text text-lighten-5">{{ user.last_name }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <form method="POST" action="{{ url_for('update_email', email=user.email) }}">
-                    <div class="input-field">
-                        <input type="email" id="new_email" name="new_email" class="validate grey-text text-lighten-5" required>
-                        <label for="new_email">New Email Address</label>
+        <form action="{{ url_for('update_profile', email=user.email) }}" method="POST" id="update-profile-form">
+            <div class="col s12 m6 offset-m3">
+                <div class="row">
+                    <div class="col s6">
+                        <p class="right-align grey-text text-lighten-5">First Name:</p>
                     </div>
-                    <button type="submit" class="btn waves-effect waves-light">Update Email</button>
-                </form>
+                    <div class="col s6">
+                        <p class="left-align grey-text text-lighten-5">{{ user.first_name }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6">
+                        <p class="right-align grey-text text-lighten-5">Last Name:</p>
+                    </div>
+                    <div class="col s6">
+                        <p class="left-align grey-text text-lighten-5">{{ user.last_name }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-icon-wrapper input-field col s12">
+                        <input id="new_email" name="new_email" type="email" class="validate grey-text text-lighten-5"
+                            value="{{ user.email }}" required>
+                        <label for="new_email" class="grey-text text-lighten-5">Email Address</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6">
+                        <p class="right-align grey-text text-lighten-5">Date of Birth:</p>
+                    </div>
+                    <div class="col s6">
+                        <p class="left-align grey-text text-lighten-5">{{ user.date_of_birth }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-icon-wrapper input-field col s12">
+                        <input id="new_time_of_birth" name="new_time_of_birth" type="text"
+                            class="timepicker grey-text text-lighten-5 timepicker-update" value="{{ user.time_of_birth }}">
+                        <label for="new_time_of_birth"  class="grey-text text-lighten-5">Time of Birth</label>
+                        <i class="material-icons input-icon">access_time</i>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6">
+                        <p class="right-align grey-text text-lighten-5">Place of Birth:</p>
+                    </div>
+                    <div class="col s6">
+                        <p class="left-align grey-text text-lighten-5">{{ user.place_of_birth }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 center-align">
+                        <button type="submit" class="btn waves-effect waves-light">Update Profile</button>
+                        <a href="{{ url_for('profile', email=user.email) }}"
+                            class="btn waves-effect waves-light red">Cancel</a>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                <div class="col s6">
-                    <p class="right-align grey-text text-lighten-5">Date of Birth:</p>
-                </div>
-                <div class="col s6">
-                    <p class="left-align grey-text text-lighten-5">{{ user.date_of_birth }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <p class="right-align grey-text text-lighten-5">Time of Birth:</p>
-                </div>
-                <div class="col s6">
-                    <p class="left-align grey-text text-lighten-5">{{ user.time_of_birth }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <p class="right-align grey-text text-lighten-5">Place of Birth:</p>
-                </div>
-                <div class="col s6">
-                    <p class="left-align grey-text text-lighten-5">{{ user.place_of_birth }}</p>
-                </div>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock %}
