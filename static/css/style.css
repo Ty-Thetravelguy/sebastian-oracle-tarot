@@ -10,7 +10,6 @@ html, body {
     overflow-x: hidden;
 }
 
-
 .sidenav.sidenav-fixed{
     width: 250px;
 }
@@ -24,6 +23,22 @@ html, body {
 h1{
     font-size: 35px;
     margin-top: 10px;
+}
+
+h2 {
+    font-size: 33px;
+}
+
+h3 {
+    font-size: 30px
+}
+
+h4 {
+    font-size: 28px
+}
+
+h5 {
+    font-size: 25px
 }
 
 .underline {
@@ -237,9 +252,26 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
 }
 
 @media (max-width:1024px){
-    h1 {
-        font-size: 25px;
-    } 
+    h1{
+        font-size: 33px;
+        margin-top: 8px;
+    }
+    
+    h2 {
+        font-size: 30px;
+    }
+    
+    h3 {
+        font-size: 28px
+    }
+    
+    h4 {
+        font-size: 26px
+    }
+    
+    h5 {
+        font-size: 24px
+    }
 }
 
 @media (max-width: 600px) {
@@ -250,6 +282,10 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
         align-items: center;
         justify-content: center;
         text-align: center;
+    }
+
+    .container .reading-page {
+        width: auto;
     }
 
     .container.index-page .col {
@@ -362,7 +398,7 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     }
 
     .reading-page {
-        margin: 30px;
+        margin: 0;
         padding: 0;
     }
 
@@ -411,11 +447,7 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
         display: flex;
         justify-content: space-between; 
         flex-wrap: nowrap; 
-        gap: 5px; 
-    }
-
-    .reading-page {
-        margin: 25px;
+        gap: 3px; 
     }
 }
 
@@ -430,10 +462,6 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     .card-wrapper {
         flex: 0 1 100%;
         max-width: 100%;
-    }
-
-    .reading-page {
-        margin: 15px;
     }
 }
 
