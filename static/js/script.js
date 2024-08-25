@@ -168,7 +168,7 @@ $(document).ready(function() {
                                     <img src="${card.cardImg}" alt="${card.cardName}" class="responsive-img">
                                 </div>
                                 <div class="card-content">
-                                    <p class="center-align blue-grey-text text-darken-4">${card.cardName}</p>
+                                    <p class="center-align vertical-align-middle blue-grey-text text-darken-4">${card.cardName}</p>
                                 </div>
                             </div>
                         </div>

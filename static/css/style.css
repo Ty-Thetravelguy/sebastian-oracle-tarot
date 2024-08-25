@@ -344,7 +344,7 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     }
 
     .card .card-content {
-        padding: 10px 0 10px 0;
+        padding: 8px 0 8px 0;
         border-radius: 0 0 2px 2px;
     }
 
@@ -408,11 +408,6 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
         box-sizing: border-box;
     }
 
-    .card .card-content {
-        padding: 10px 0 10px 0;
-        border-radius: 0 0 2px 2px;
-    }
-
     #reading-result {
         text-align: center;
     }
@@ -440,14 +435,11 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     .card-wrapper {
         flex: 1 1 calc(33.333% - 10px); 
         max-width: calc(33.333% - 10px); 
-        margin: 5px; 
+        
     }
 
     .card-container {
-        display: flex;
-        justify-content: space-between; 
-        flex-wrap: nowrap; 
-        gap: 3px; 
+        justify-content: center;
     }
 }
 
@@ -460,8 +452,8 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     }
     
     .card-wrapper {
-        flex: 0 1 100%;
-        max-width: 100%;
+        flex: 1 1 calc(33.333% - 8px); 
+        max-width: calc(33.333% - 8px); 
     }
 }
 
