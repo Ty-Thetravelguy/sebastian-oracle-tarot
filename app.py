@@ -150,15 +150,14 @@ def login():
 
         existing_user = mongo.db.users.find_one({"email": email})
 
-        if (existing_user and 
-                check_password_hash(existing_user["password"], password)):
+        if existing_user and check_password_hash(existing_user["password"], password):
             session["user"] = existing_user["email"]
-            session.permanent = True  # Make the session permanent
+            session.permanent = True
             flash("Welcome, {}".format(existing_user["first_name"]))
-        return redirect(url_for("get_cards"))
-
-        flash("Incorrect email and/or password!")
-        return redirect(url_for("login"))
+            return redirect(url_for("get_cards"))
+        else:
+            flash("Incorrect email and/or password!")
+            return redirect(url_for("login"))
 
     return render_template("login.html")
 
