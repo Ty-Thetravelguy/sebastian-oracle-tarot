@@ -11,6 +11,10 @@ html, body {
 }
 
 
+.sidenav.sidenav-fixed{
+    width: 250px;
+}
+
 .custom-hamburger {
     font-size: 50px;
     color: #fafafa;
@@ -253,16 +257,16 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     }
 
     .home-img {
-        margin-bottom: 20px; /* Add space below the image */
+        margin-bottom: 20px; 
     }
 
     .btn {
-        width: 100%; /* Make buttons full-width */
-        margin-bottom: 10px; /* Add space between buttons */
+        width: 100%; 
+        margin-bottom: 10px; 
     }
 
     .btn.right {
-        float: none; /* Ensure the buttons are stacked */
+        float: none; 
     }
 
     h1 {
@@ -358,7 +362,7 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     }
 
     .reading-page {
-        margin: 0;
+        margin: 30px;
         padding: 0;
     }
 
@@ -409,6 +413,10 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
         flex-wrap: nowrap; 
         gap: 5px; 
     }
+
+    .reading-page {
+        margin: 25px;
+    }
 }
 
 
@@ -422,6 +430,16 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     .card-wrapper {
         flex: 0 1 100%;
         max-width: 100%;
+    }
+
+    .reading-page {
+        margin: 15px;
+    }
+}
+
+@media (max-width: 362px) {
+    .container.index-page {
+        padding: 0 10px; /* Reduce padding further if needed */
     }
 }
 
