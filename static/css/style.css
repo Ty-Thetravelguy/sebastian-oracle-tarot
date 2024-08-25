@@ -338,9 +338,10 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     .card-container {
         width: 100vw;
         padding: 0;
-        margin: 0;
+        margin-left: -13px;
         box-sizing: border-box;
         justify-content: center;
+        gap: 15px;
     }
 
     .card .card-content {
@@ -389,14 +390,6 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
         height: auto;
     }
 
-    .card-container {
-        width: 100vw;
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        justify-content: center;
-    }
-
     .reading-page {
         margin: 0;
         padding: 0;
@@ -434,15 +427,10 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
 @media (max-width: 459px) {
     .card-wrapper {
         flex: 1 1 calc(33.333% - 10px); 
-        max-width: calc(33.333% - 10px); 
+        max-width: calc(33.333% - 20px); 
         
     }
-
-    .card-container {
-        justify-content: center;
-    }
 }
-
 
 @media (max-width: 339px) {
     
@@ -450,16 +438,11 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
         width: 80px;
         height: 200px; 
     }
-    
-    .card-wrapper {
-        flex: 1 1 calc(33.333% - 8px); 
-        max-width: calc(33.333% - 8px); 
-    }
 }
 
 @media (max-width: 362px) {
     .container.index-page {
-        padding: 0 10px; /* Reduce padding further if needed */
+        padding: 0 10px; 
     }
 }
 
