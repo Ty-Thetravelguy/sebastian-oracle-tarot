@@ -34,24 +34,15 @@ $(document).ready(function() {
         const timeOfBirthElement = $('#time_of_birth');
         const newTimeOfBirthElement = $('#new_time_of_birth');
     
-        console.log('Time of Birth Element:', timeOfBirthElement.length);
-        console.log('New Time of Birth Element:', newTimeOfBirthElement.length);
-    
         const timeOfBirthInstance = timeOfBirthElement.length ? M.Timepicker.getInstance(timeOfBirthElement) : null;
         const newTimeOfBirthInstance = newTimeOfBirthElement.length ? M.Timepicker.getInstance(newTimeOfBirthElement) : null;
     
         if (timeOfBirthInstance) {
-            console.log('Closing time_of_birth picker');
             timeOfBirthInstance.close();
-        } else {
-            console.log('time_of_birth picker not initialized');
-        }
-    
+        } 
+
         if (newTimeOfBirthInstance) {
-            console.log('Closing new_time_of_birth picker');
             newTimeOfBirthInstance.close();
-        } else {
-            console.log('new_time_of_birth picker not initialized');
         }
     });
 
