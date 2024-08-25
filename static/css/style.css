@@ -16,9 +16,6 @@ html, body {
     color: #fafafa;
 }
 
-/* .sidenav-trigger {
-    display: none;
-} */
 
 h1{
     font-size: 35px;
@@ -225,14 +222,6 @@ input:not([type]):disabled, input:not([type])[readonly="readonly"], input[type=t
     color: #fafafa;
 }
 
-header {
-    padding: 20px 0;
-}
-
-/* Control visibility of the hamburger menu */
-.sidenav-trigger {
-    display: none;
-}
 
 /****************************Media Queries**************************/
 
@@ -247,18 +236,6 @@ header {
     h1 {
         font-size: 25px;
     } 
-}
-
-@media (max-width: 1140px) {
-
-    .sidenav-trigger {
-        display: block;
-    }
-
-    /* Ensure the sidenav (fixed sidebar) is hidden */
-    .sidenav-fixed {
-        display: none;
-    }
 }
 
 @media (max-width: 600px) {
@@ -451,12 +428,6 @@ header {
 @media only screen and (min-width: 601px) {
     .show-on-medium-and-up {
         display: block !important;
-    }
-}
-
-@media (min-width: 1140px) {
-    .sidenav-fixed {
-        display: block;
     }
 }
 
