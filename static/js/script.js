@@ -105,12 +105,9 @@ $(document).ready(function() {
             if (parsedData && parsedData.selected_cards) {
                 const cardContainer = $('#cards-container');
                 cardContainer.empty(); // Clear previous content if any
-                parsedData.selected_cards.forEach((card, index) => {
-                    if (index % 3 === 0) {
-                        cardContainer.append('<div class="row card-row"></div>');
-                    }
+                parsedData.selected_cards.forEach(card => {
                     const cardElement = $(`
-                        <div class="col s4">
+                        <div class="card-wrapper">
                             <div class="card">
                                 <div class="card-image">
                                     <img src="${card.cardImg}" alt="${card.cardName}" class="responsive-img">
@@ -121,7 +118,7 @@ $(document).ready(function() {
                             </div>
                         </div>
                     `);
-                    cardContainer.find('.card-row').last().append(cardElement);
+                    cardContainer.append(cardElement);
                 });
                 $('#reading-output').text(parsedData.reading_output);
     

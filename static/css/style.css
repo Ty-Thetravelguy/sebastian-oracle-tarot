@@ -7,7 +7,7 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow-x: hidden; /* Only hide horizontal overflow */
+    overflow-x: hidden;
 }
 
 
@@ -32,7 +32,7 @@ h1{
 
 .card-404 {
     margin-top: 50px;
-    min-height: 300px; /* Adjust the height as necessary */
+    min-height: 300px; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -43,7 +43,7 @@ h1{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 70vh; /* Adjust as necessary */
+    min-height: 70vh; 
 }
 
 .card-404 .card-content {
@@ -149,13 +149,11 @@ h1{
     top: 40%;
     right: 10px;
     transform: translateY(-50%);
-    color: #9e9e9e; /* Adjust icon color */
+    color: #9e9e9e; 
   
 }
 
 /****************************Profile page**************************/
-
-
 
 .email-container {
     display: flex;
@@ -189,6 +187,22 @@ h1{
     height: 425px;
 }
 
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.card-wrapper {
+    flex: 0 1 190px; 
+    max-width: 190px;
+    margin-bottom: 20px;
+}
+
 
 /****************************Saved reading page**************************/
 
@@ -218,7 +232,6 @@ h1{
         font-size: 25px;
     } 
 }
-
 
 @media (max-width: 600px) {
 
@@ -251,8 +264,26 @@ h1{
         height: 230px;
     }
 
+    .card-wrapper {
+        flex: 0 1 100px; 
+        max-width: 100px;
+    }
+
     .card-container p {
         font-size: 12px;
+    }
+
+    .card-container {
+        width: 100vw;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        justify-content: center;
+    }
+
+    .card .card-content {
+        padding: 10px 0 10px 0;
+        border-radius: 0 0 2px 2px;
     }
 
     .email-container {
@@ -330,6 +361,23 @@ h1{
     }
     .show-on-small {
         display: block !important;
+    }
+}
+
+@media (max-width: 579px) {
+    .card-container {
+        justify-content: center;
+    }
+    .card-wrapper {
+        flex: 0 1 calc(33.333% - 20px);
+        max-width: calc(33.333% - 20px);
+    }
+}
+
+@media (max-width: 459px) {
+    .card-wrapper {
+        flex: 0 1 calc(50% - 20px);
+        max-width: calc(50% - 20px);
     }
 }
 
